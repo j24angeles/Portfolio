@@ -1,6 +1,8 @@
 import React from 'react';
 import { Facebook, Instagram, Github, Linkedin } from 'lucide-react';
 import icon from '../assets/icon.png'; 
+// REMOVE THIS LINE - no longer needed since file is in public folder
+// import cv from '../assets/ANGELES_CV.pdf';
 
 const Home = () => {
   const socialLinks = [
@@ -30,11 +32,11 @@ const Home = () => {
     }
   ];
 
-  // Function to scroll to projects section (matching navbar's smooth scroll)
+  // Function to scroll to projects section
   const scrollToProjects = () => {
     const element = document.getElementById('projects');
     if (element) {
-      const navbarHeight = 80; // Height of the sticky navbar
+      const navbarHeight = 80;
       const elementPosition = element.offsetTop - navbarHeight;
       
       window.scrollTo({
@@ -44,60 +46,38 @@ const Home = () => {
     }
   };
 
-  // Function to handle resume download with error handling
- // Fixed handleDownloadResume function
-const handleDownloadResume = () => {
-  try {
-    // Fix: Remove the curly braces to get the actual URL string
-    const resumeUrl = cv; // This should be the imported path string
-    
-    // Create a temporary anchor element
-    const link = document.createElement('a');
-    link.href = resumeUrl;
-    link.download = 'Joaquin-Angeles_CV.pdf';
-    
-    // Trigger download
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-  } catch (error) {
-    console.error('Failed to download resume:', error);
-    alert('Sorry, there was an error downloading my resume. Please try again later or contact me directly.');
-  }
-};
-
-// Alternative approach - if the above doesn't work, try this:
-const handleDownloadResumeAlternative = async () => {
-  try {
-    // For deployed websites, you might need to use the public folder path
-    const resumeUrl = '/ANGELES_CV.pdf'; // Assuming the file is in public folder
-    
-    // Try fetching the file first to check if it exists
-    const response = await fetch(resumeUrl);
-    if (!response.ok) {
-      throw new Error('Resume file not found');
+  // CORRECTED function - use direct path to public folder
+  const handleDownloadResume = async () => {
+    try {
+      // Direct path to file in public folder
+      const resumeUrl = '/ANGELES_CV.pdf';
+      
+      // Test if file exists first
+      const response = await fetch(resumeUrl);
+      if (!response.ok) {
+        throw new Error('Resume file not found');
+      }
+      
+      // Create download
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = 'Joaquin-Angeles_CV.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Cleanup
+      window.URL.revokeObjectURL(downloadUrl);
+      
+    } catch (error) {
+      console.error('Failed to download resume:', error);
+      // Fallback - open in new tab
+      window.open('/ANGELES_CV.pdf', '_blank');
     }
-    
-    // Create blob and download
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'Joaquin-Angeles_CV.pdf';
-    document.body.appendChild(link);
-    link.click();
-    
-    // Cleanup
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-    
-  } catch (error) {
-    console.error('Failed to download resume:', error);
-    alert('Sorry, there was an error downloading my resume. Please try again later or contact me directly.');
-  }
-};
+  };
 
   return (
     <section 
