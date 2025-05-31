@@ -67,7 +67,7 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
   e.preventDefault();
   setIsSubmitting(true);
   setFormStatus('');
@@ -104,21 +104,39 @@ const Contact = () => {
   try {
     console.log('Sending data to server:', trimmedData);
     
-   const response = await fetch('/api/send-email', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  },
-  body: JSON.stringify(trimmedData)
-});
+    const response = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(trimmedData)
+    });
 
     console.log('Response status:', response.status);
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+    // Check if response is ok first
+    if (!response.ok) {
+      // Try to get error message from response
+      let errorMessage = `Server responded with status ${response.status}`;
+      try {
+        const errorText = await response.text();
+        console.log('Error response text:', errorText);
+        if (errorText) {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData.message || errorMessage;
+        }
+      } catch (parseError) {
+        console.log('Could not parse error response');
+      }
+      throw new Error(errorMessage);
+    }
     
     const result = await response.json();
     console.log('Server response:', result);
 
-    if (response.ok && result.success) {
+    if (result.success) {
       setFormStatus('success');
       setFormData({
         name: '',
@@ -133,6 +151,13 @@ const Contact = () => {
   } catch (error) {
     console.error('Network error:', error);
     setFormStatus('error');
+    
+    // More specific error handling
+    if (error.message.includes('403')) {
+      console.error('Server returned 403 - Check if server is running and CORS is configured');
+    } else if (error.message.includes('Failed to fetch')) {
+      console.error('Could not connect to server - Make sure server is running on port 5000');
+    }
   } finally {
     setIsSubmitting(false);
   }
