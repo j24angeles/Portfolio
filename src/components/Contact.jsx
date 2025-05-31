@@ -15,6 +15,7 @@ import {
   Instagram,
   ExternalLink
 } from 'lucide-react';
+import api from '../api/send-email.js'; // Using the imported API
 
 const Contact = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -67,101 +68,74 @@ const Contact = () => {
     }));
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
-  setFormStatus('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setFormStatus('');
 
-  // Trim whitespace from form data
-  const trimmedData = {
-    name: formData.name.trim(),
-    email: formData.email.trim(),
-    subject: formData.subject.trim(),
-    message: formData.message.trim()
-  };
+    // Trim whitespace from form data
+    const trimmedData = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      subject: formData.subject.trim(),
+      message: formData.message.trim()
+    };
 
-  // Basic validation - check if required fields are not empty after trimming
-  if (!trimmedData.name || !trimmedData.email || !trimmedData.message) {
-    console.log('Validation failed - missing required fields:', {
-      name: !!trimmedData.name,
-      email: !!trimmedData.email,
-      message: !!trimmedData.message
-    });
-    setFormStatus('error');
-    setIsSubmitting(false);
-    return;
-  }
-
-  // Email validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(trimmedData.email)) {
-    console.log('Email validation failed:', trimmedData.email);
-    setFormStatus('error');
-    setIsSubmitting(false);
-    return;
-  }
-
-  try {
-    console.log('Sending data to server:', trimmedData);
-    
-    const response = await fetch('/api/send-email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(trimmedData)
-    });
-
-    console.log('Response status:', response.status);
-    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
-
-    // Check if response is ok first
-    if (!response.ok) {
-      // Try to get error message from response
-      let errorMessage = `Server responded with status ${response.status}`;
-      try {
-        const errorText = await response.text();
-        console.log('Error response text:', errorText);
-        if (errorText) {
-          const errorData = JSON.parse(errorText);
-          errorMessage = errorData.message || errorMessage;
-        }
-      } catch (parseError) {
-        console.log('Could not parse error response');
-      }
-      throw new Error(errorMessage);
-    }
-    
-    const result = await response.json();
-    console.log('Server response:', result);
-
-    if (result.success) {
-      setFormStatus('success');
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
+    // Basic validation - check if required fields are not empty after trimming
+    if (!trimmedData.name || !trimmedData.email || !trimmedData.message) {
+      console.log('Validation failed - missing required fields:', {
+        name: !!trimmedData.name,
+        email: !!trimmedData.email,
+        message: !!trimmedData.message
       });
-    } else {
       setFormStatus('error');
-      console.error('Server error:', result.message);
+      setIsSubmitting(false);
+      return;
     }
-  } catch (error) {
-    console.error('Network error:', error);
-    setFormStatus('error');
-    
-    // More specific error handling
-    if (error.message.includes('403')) {
-      console.error('Server returned 403 - Check if server is running and CORS is configured');
-    } else if (error.message.includes('Failed to fetch')) {
-      console.error('Could not connect to server - Make sure server is running on port 5000');
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedData.email)) {
+      console.log('Email validation failed:', trimmedData.email);
+      setFormStatus('error');
+      setIsSubmitting(false);
+      return;
     }
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+
+    try {
+      console.log('Sending data to server:', trimmedData);
+      
+      // Using the imported API instead of direct fetch
+      const result = await api.sendEmail(trimmedData);
+      
+      console.log('Server response:', result);
+
+      if (result.success) {
+        setFormStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        setFormStatus('error');
+        console.error('Server error:', result.message);
+      }
+    } catch (error) {
+      console.error('API error:', error);
+      setFormStatus('error');
+      
+      // More specific error handling
+      if (error.message.includes('403')) {
+        console.error('Server returned 403 - Check if server is running and CORS is configured');
+      } else if (error.message.includes('Failed to fetch')) {
+        console.error('Could not connect to server - Make sure server is running on port 5000');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section 
@@ -434,25 +408,25 @@ const Contact = () => {
                 <Mail className="w-4 h-4" />
                 <span>Email Me</span>
               </a>
-            <a 
-  href="#"
-  className="inline-flex items-center space-x-2 px-6 py-3 border-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:text-white"
-  style={{ 
-    borderColor: '#011936', 
-    color: '#011936'
-  }}
-  onMouseEnter={(e) => {
-    e.target.style.backgroundColor = '#011936';
-    e.target.style.color = 'white';
-  }}
-  onMouseLeave={(e) => {
-    e.target.style.backgroundColor = 'transparent';
-    e.target.style.color = '#011936';
-  }}
->
-  <MessageCircle className="w-4 h-4" />
-  <span>Let's Chat</span>
-</a>
+              <a 
+                href="#"
+                className="inline-flex items-center space-x-2 px-6 py-3 border-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:text-white"
+                style={{ 
+                  borderColor: '#011936', 
+                  color: '#011936'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#011936';
+                  e.target.style.color = 'white';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.color = '#011936';
+                }}
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Let's Chat</span>
+              </a>
             </div>
           </div>
         </div>
