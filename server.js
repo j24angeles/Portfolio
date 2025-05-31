@@ -1,29 +1,72 @@
+import express from 'express';
+import cors from 'cors';
 import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-// CORS headers for all responses
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept, Origin, X-Requested-With',
-};
+// Load environment variables
+dotenv.config();
 
-export default async function handler(req, res) {
-  // Handle CORS preflight
-  if (req.method === 'OPTIONS') {
-    return res.status(200).setHeader('Access-Control-Allow-Origin', '*')
-                          .setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-                          .setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, Origin, X-Requested-With')
-                          .end();
-  }
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    return res.status(405).json({
-      success: false,
-      message: 'Method not allowed'
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+// Enable trust proxy for proper IP detection
+app.set('trust proxy', 1);
+
+// Middleware
+app.use(cors({
+  origin: true, // Allow all origins for development
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept', 'Origin', 'X-Requested-With']
+}));
+
+// Add request logging
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  console.log('Headers:', req.headers);
+  next();
+});
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Serve static files in production
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'dist')));
+}
+
+// Email transporter configuration
+const createTransporter = () => {
+  // Gmail configuration
+  if (process.env.EMAIL_SERVICE === 'gmail') {
+    return nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS // Use App Password for Gmail
+      }
     });
   }
+  
+  // Generic SMTP configuration
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT || 587,
+    secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+};
 
+// Email sending endpoint
+app.post('/api/send-email', async (req, res) => {
   try {
     const { name, email, subject, message } = req.body;
 
@@ -45,13 +88,7 @@ export default async function handler(req, res) {
     }
 
     // Create transporter
-    const transporter = nodemailer.createTransporter({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS // App Password for Gmail
-      }
-    });
+    const transporter = createTransporter();
 
     // Verify transporter configuration
     await transporter.verify();
@@ -94,7 +131,7 @@ export default async function handler(req, res) {
           </div>
         </div>
       `,
-      replyTo: email
+      replyTo: email // This allows you to reply directly to the sender
     };
 
     // Send email
@@ -102,7 +139,7 @@ export default async function handler(req, res) {
     
     console.log('Message sent: %s', info.messageId);
     
-    // Optional: Send confirmation email
+    // Optional: Send confirmation email to the sender
     if (process.env.SEND_CONFIRMATION === 'true') {
       const confirmationOptions = {
         from: `"${process.env.YOUR_NAME || 'Portfolio'}" <${process.env.EMAIL_USER}>`,
@@ -125,12 +162,7 @@ export default async function handler(req, res) {
       await transporter.sendMail(confirmationOptions);
     }
 
-    // Set CORS headers and return success response
-    Object.entries(corsHeaders).forEach(([key, value]) => {
-      res.setHeader(key, value);
-    });
-
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       message: 'Email sent successfully'
     });
@@ -138,14 +170,47 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Error sending email:', error);
     
-    // Set CORS headers for error response too
-    Object.entries(corsHeaders).forEach(([key, value]) => {
-      res.setHeader(key, value);
-    });
-    
-    return res.status(500).json({
+    res.status(500).json({
       success: false,
       message: 'Failed to send email. Please try again later.'
     });
   }
+});
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  console.log('Health check requested');
+  res.status(200).json({
+    success: true,
+    message: 'Server is running',
+    timestamp: new Date().toISOString(),
+    port: PORT
+  });
+});
+
+// Add a simple test endpoint
+app.get('/api/test', (req, res) => {
+  console.log('Test endpoint hit');
+  res.status(200).json({ message: 'Server is working!' });
+});
+
+// Serve React app in production
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  });
 }
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    success: false,
+    message: 'Something went wrong!'
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+});
