@@ -407,7 +407,22 @@ const AboutMe = () => {
                         <p className="text-gray-600 text-sm leading-relaxed">{project.description}</p>
                         
                         {isHovered && (
-                          <div className="mt-3 sm:mt-4 flex items-center text-xs font-medium animate-fadeIn" style={{ color: project.color }}>
+                          <div 
+                            className="mt-3 sm:mt-4 flex items-center text-xs font-medium animate-fadeIn cursor-pointer" 
+                            style={{ color: project.color }}
+                            onClick={() => {
+                              const element = document.getElementById('projects');
+                              if (element) {
+                                const navbarHeight = 80; // Height of the sticky navbar
+                                const elementPosition = element.offsetTop - navbarHeight;
+                                
+                                window.scrollTo({
+                                  top: elementPosition,
+                                  behavior: 'smooth'
+                                });
+                              }
+                            }}
+                          >
                             <span>Learn More</span>
                             <svg className="w-3 h-3 sm:w-4 sm:h-4 ml-1 transition-transform duration-300 transform translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
@@ -422,9 +437,23 @@ const AboutMe = () => {
             </div>
 
             {/* Call to Action */}
-            <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-white rounded-xl border-2 border-dashed border-gray-300 text-center hover:border-solid transition-all duration-300 cursor-pointer"
-                 onMouseEnter={(e) => e.target.style.borderColor = '#011936'}
-                 onMouseLeave={(e) => e.target.style.borderColor = ''}>
+            <div 
+              className="mt-6 sm:mt-8 p-4 sm:p-6 bg-white rounded-xl border-2 border-dashed border-gray-300 text-center hover:border-solid transition-all duration-300 cursor-pointer"
+              onMouseEnter={(e) => e.target.style.borderColor = '#011936'}
+              onMouseLeave={(e) => e.target.style.borderColor = ''}
+              onClick={() => {
+                const element = document.getElementById('contact');
+                if (element) {
+                  const navbarHeight = 80; // Height of the sticky navbar
+                  const elementPosition = element.offsetTop - navbarHeight;
+                  
+                  window.scrollTo({
+                    top: elementPosition,
+                    behavior: 'smooth'
+                  });
+                }
+              }}
+            >
               <div className="flex flex-col items-center space-y-3">
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-gray-100">
                   <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
