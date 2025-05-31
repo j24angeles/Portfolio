@@ -3,7 +3,7 @@ import { GraduationCap, Code, Heart, Zap, Trophy, Coffee, Gamepad2, Users, MapPi
 
 const AboutMe = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [activeTimeline, setActiveTimeline] = useState(0);
+  const [activeCard, setActiveCard] = useState(0);
   const [hoveredProject, setHoveredProject] = useState(null);
   const [selectedTab, setSelectedTab] = useState('journey');
 
@@ -14,12 +14,12 @@ const AboutMe = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveTimeline((prev) => (prev + 1) % timelineItems.length);
+      setActiveCard((prev) => (prev + 1) % educationCards.length);
     }, 4000);
     return () => clearInterval(interval);
   }, []);
 
-  const timelineItems = [
+  const educationCards = [
     {
       year: "2020-2022",
       title: "Our Lady of Peace School",
@@ -80,25 +80,25 @@ const AboutMe = () => {
     switch(selectedTab) {
       case 'journey':
         return (
-          <div className="space-y-6">
-            <p className="text-gray-600 text-lg leading-relaxed">
+          <div className="space-y-4 sm:space-y-6">
+            <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
               I'm a passionate <span className="font-semibold" style={{ color: '#011936' }}>Full-Stack Developer</span> who 
               thrives on creating digital experiences that truly connect with people. There's something magical about 
               building products that not only function beautifully but also make a real difference in users' lives.
             </p>
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
               My fascination with technology stems from its incredible pace of evolution. Every day brings new 
               possibilities, and I love being at the forefront of innovation, turning complex problems into 
               elegant, user-friendly solutions.
             </p>
-            <div className="mt-8 p-6 bg-gray-50 rounded-xl border-l-4" style={{ borderColor: '#011936' }}>
+            <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-gray-50 rounded-xl border-l-4" style={{ borderColor: '#011936' }}>
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#011936' }}>
-                  <Code className="w-6 h-6 text-white" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#011936' }}>
+                  <Code className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-800">Currently Building</h4>
-                  <p className="text-gray-600 text-sm">Innovative web solutions that make an impact</p>
+                  <h4 className="font-semibold text-gray-800 text-sm sm:text-base">Currently Building</h4>
+                  <p className="text-gray-600 text-xs sm:text-sm">Innovative web solutions that make an impact</p>
                 </div>
               </div>
             </div>
@@ -106,16 +106,16 @@ const AboutMe = () => {
         );
       case 'skills':
         return (
-          <div className="space-y-6">
-            <p className="text-gray-600 text-lg leading-relaxed mb-6">
+          <div className="space-y-4 sm:space-y-6">
+            <p className="text-gray-600 text-base sm:text-lg leading-relaxed mb-6">
               The satisfaction of seeing a function come to life and watching a website transform from concept to 
               reality drives my passion for development.
             </p>
             {skills.map((skill, index) => (
-              <div key={index} className="space-y-3">
+              <div key={index} className="space-y-2 sm:space-y-3">
                 <div className="flex justify-between items-center">
-                  <span className="font-medium text-gray-700">{skill.name}</span>
-                  <span className="text-sm font-semibold px-3 py-1 rounded-full text-white" style={{ backgroundColor: skill.color }}>
+                  <span className="font-medium text-gray-700 text-sm sm:text-base">{skill.name}</span>
+                  <span className="text-xs sm:text-sm font-semibold px-2 sm:px-3 py-1 rounded-full text-white" style={{ backgroundColor: skill.color }}>
                     {skill.level}%
                   </span>
                 </div>
@@ -135,16 +135,16 @@ const AboutMe = () => {
         );
       case 'passion':
         return (
-          <div className="space-y-6">
-            <p className="text-gray-600 text-lg leading-relaxed">
+          <div className="space-y-4 sm:space-y-6">
+            <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
               I'm currently available for <span className="font-semibold" style={{ color: '#011936' }}>freelance web development</span> projects 
               and always excited to collaborate on meaningful work that makes an impact.
             </p>
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
               When I'm not immersed in development, you'll find me staying active through sports, 
               unwinding with friends, or diving into the latest games. Balance is key to creativity!
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mt-6 sm:mt-8">
               {[
                 { icon: Trophy, text: "Sports" },
                 { icon: Gamepad2, text: "Gaming" },
@@ -157,18 +157,18 @@ const AboutMe = () => {
                 return (
                   <div 
                     key={index}
-                    className="bg-white rounded-xl p-5 border-2 border-gray-100 hover:border-opacity-50 transition-all duration-300 hover:-translate-y-2 cursor-pointer group hover:shadow-lg"
+                    className="bg-white rounded-xl p-3 sm:p-5 border-2 border-gray-100 hover:border-opacity-50 transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2 cursor-pointer group hover:shadow-lg"
                     onMouseEnter={(e) => e.target.style.borderColor = '#011936'}
                     onMouseLeave={(e) => e.target.style.borderColor = ''}
                   >
-                    <div className="flex flex-col items-center space-y-3">
+                    <div className="flex flex-col items-center space-y-2 sm:space-y-3">
                       <div 
-                        className="w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+                        className="w-8 h-8 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110"
                         style={{ backgroundColor: '#011936' }}
                       >
-                        <IconComponent className="w-6 h-6 text-white" />
+                        <IconComponent className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
                       </div>
-                      <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">{item.text}</span>
+                      <span className="text-xs sm:text-sm font-medium text-gray-700 group-hover:text-gray-900 text-center">{item.text}</span>
                     </div>
                   </div>
                 );
@@ -184,39 +184,96 @@ const AboutMe = () => {
   return (
     <section 
       id="about" 
-      className="min-h-screen bg-gray-50 py-16 lg:py-20"
+      className="min-h-screen bg-gray-50 py-12 sm:py-16 lg:py-20"
       style={{ fontFamily: 'Roboto, sans-serif' }}
     >
-      <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
         
         {/* Header */}
         <div 
-          className={`text-center mb-16 transform transition-all duration-1000 ${
+          className={`text-center mb-12 sm:mb-16 transform transition-all duration-1000 ${
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
           }`}
         >
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6" style={{ color: '#011936' }}>
+          <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6" style={{ color: '#011936' }}>
             About Me
           </h2>
-          <div className="w-24 h-1 mx-auto rounded-full" style={{ backgroundColor: '#011936' }}></div>
+          <div className="w-16 sm:w-24 h-1 mx-auto rounded-full" style={{ backgroundColor: '#011936' }}></div>
         </div>
 
-        {/* Clean Timeline */}
+        {/* Education Section */}
         <div 
-          className={`mb-16 transform transition-all duration-1000 delay-200 ${
+          className={`mb-12 sm:mb-16 transform transition-all duration-1000 delay-200 ${
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
           }`}
         >
-          <h3 className="text-3xl font-bold text-center mb-12" style={{ color: '#011936' }}>Educational Journey</h3>
+          <h3 className="text-2xl sm:text-3xl font-bold text-center mb-8 sm:mb-12" style={{ color: '#011936' }}>Educational Journey</h3>
           
-          <div className="relative max-w-4xl mx-auto">
-            {/* Simple Timeline Line */}
+          {/* Mobile/Tablet Cards (hidden on lg+) */}
+          <div className="lg:hidden max-w-4xl mx-auto space-y-6 sm:space-y-8">
+            {educationCards.map((card, index) => {
+              const IconComponent = card.icon;
+              const isActive = activeCard === index;
+              
+              return (
+                <div
+                  key={index}
+                  className={`bg-white rounded-2xl p-6 sm:p-8 shadow-lg border-2 border-gray-100 cursor-pointer transition-all duration-500 transform ${
+                    isActive ? 'scale-102 shadow-2xl border-opacity-50' : 'scale-100 hover:shadow-xl hover:scale-101'
+                  }`}
+                  style={isActive ? { borderColor: card.color } : {}}
+                  onClick={() => setActiveCard(index)}
+                  onMouseEnter={() => setActiveCard(index)}
+                >
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                    
+                    {/* Icon */}
+                    <div 
+                      className={`w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center shadow-lg transition-all duration-500 ${
+                        isActive ? 'scale-110' : 'scale-100'
+                      }`}
+                      style={{ backgroundColor: card.color }}
+                    >
+                      <IconComponent className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="flex-1 w-full">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3">
+                        <div className="flex items-center mb-2 sm:mb-0">
+                          <Calendar className="w-4 h-4 text-gray-500 mr-2" />
+                          <span className="text-sm font-medium text-gray-500">{card.year}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Award className="w-4 h-4 mr-2" style={{ color: card.color }} />
+                          <span className="text-sm font-medium" style={{ color: card.color }}>{card.achievement}</span>
+                        </div>
+                      </div>
+                      
+                      <h4 className="text-xl sm:text-2xl font-bold mb-2" style={{ color: '#011936' }}>{card.title}</h4>
+                      <p className="text-gray-700 font-semibold mb-3 text-base sm:text-lg">{card.subtitle}</p>
+                      <p className="text-gray-600 text-sm sm:text-base mb-4 leading-relaxed">{card.description}</p>
+                      
+                      <div className="flex items-center text-xs sm:text-sm text-gray-500">
+                        <MapPin className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+                        {card.location}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Desktop Timeline (hidden on smaller screens) */}
+          <div className="hidden lg:block relative max-w-4xl mx-auto">
+            {/* Timeline Line */}
             <div className="absolute left-1/2 transform -translate-x-1/2 w-1 h-full bg-gray-300 rounded-full"></div>
             
-            {timelineItems.map((item, index) => {
+            {educationCards.map((item, index) => {
               const IconComponent = item.icon;
               const isLeft = index % 2 === 0;
-              const isActive = activeTimeline === index;
+              const isActive = activeCard === index;
               
               return (
                 <div
@@ -224,8 +281,8 @@ const AboutMe = () => {
                   className={`relative flex items-center mb-12 cursor-pointer transition-all duration-500 ${
                     isLeft ? 'flex-row-reverse' : 'flex-row'
                   }`}
-                  onClick={() => setActiveTimeline(index)}
-                  onMouseEnter={() => setActiveTimeline(index)}
+                  onClick={() => setActiveCard(index)}
+                  onMouseEnter={() => setActiveCard(index)}
                 >
                   {/* Timeline Node */}
                   <div 
@@ -251,7 +308,7 @@ const AboutMe = () => {
                       
                       <h4 className="text-xl font-bold mb-2" style={{ color: '#011936' }}>{item.title}</h4>
                       <p className="text-gray-700 font-semibold mb-2">{item.subtitle}</p>
-                      <div className="flex items-center mb-3">
+                      <div className={`flex items-center mb-3 ${isLeft ? 'justify-end' : 'justify-start'}`}>
                         <Award className="w-4 h-4 mr-2" style={{ color: item.color }} />
                         <span className="text-sm font-medium" style={{ color: item.color }}>{item.achievement}</span>
                       </div>
@@ -271,7 +328,7 @@ const AboutMe = () => {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16">
           
           {/* Left Column - Tabbed Content */}
           <div 
@@ -280,42 +337,42 @@ const AboutMe = () => {
             }`}
           >
             {/* Tab Navigation */}
-            <div className="flex space-x-2 mb-8 bg-white rounded-xl p-2 shadow-md">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mb-6 sm:mb-8 bg-white rounded-xl p-2 shadow-md">
               {tabs.map((tab) => {
                 const IconComponent = tab.icon;
                 return (
                   <button
                     key={tab.id}
                     onClick={() => setSelectedTab(tab.id)}
-                    className={`flex items-center space-x-2 px-4 py-3 rounded-lg font-medium transition-all duration-300 flex-1 justify-center ${
+                    className={`flex items-center justify-center space-x-2 px-3 sm:px-4 py-3 rounded-lg font-medium transition-all duration-300 flex-1 ${
                       selectedTab === tab.id 
-                        ? 'text-white shadow-md transform scale-105' 
+                        ? 'text-white shadow-md transform scale-102' 
                         : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
                     }`}
                     style={selectedTab === tab.id ? { backgroundColor: '#011936' } : {}}
                   >
                     <IconComponent className="w-4 h-4" />
-                    <span className="text-sm">{tab.label}</span>
+                    <span className="text-xs sm:text-sm">{tab.label}</span>
                   </button>
                 );
               })}
             </div>
 
             {/* Tab Content */}
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 min-h-96">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-gray-100 min-h-80 sm:min-h-96">
               {renderTabContent()}
             </div>
           </div>
 
-          {/* Right Column - Simplified Project Preview */}
+          {/* Right Column - Project Preview */}
           <div 
             className={`transform transition-all duration-1000 delay-600 ${
               isVisible ? 'translate-x-0 opacity-100' : 'translate-x-8 opacity-0'
             }`}
           >
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-2xl font-bold" style={{ color: '#011936' }}>Project Highlights</h3>
-              <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+            <div className="flex items-center justify-between mb-6 sm:mb-8">
+              <h3 className="text-xl sm:text-2xl font-bold" style={{ color: '#011936' }}>Project Highlights</h3>
+              <span className="text-xs sm:text-sm text-gray-500 bg-gray-100 px-2 sm:px-3 py-1 rounded-full">
                 View More →
               </span>
             </div>
@@ -328,31 +385,31 @@ const AboutMe = () => {
                 return (
                   <div
                     key={index}
-                    className={`bg-white rounded-xl p-6 shadow-md border-2 border-gray-100 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg ${
+                    className={`bg-white rounded-xl p-4 sm:p-6 shadow-md border-2 border-gray-100 cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg ${
                       isHovered ? 'scale-102' : 'scale-100'
                     }`}
                     style={isHovered ? { borderColor: project.color } : {}}
                     onMouseEnter={() => setHoveredProject(index)}
                     onMouseLeave={() => setHoveredProject(null)}
                   >
-                    <div className="flex items-start space-x-4">
+                    <div className="flex items-start space-x-3 sm:space-x-4">
                       <div 
-                        className={`p-3 rounded-xl transition-all duration-300 ${
+                        className={`p-2 sm:p-3 rounded-xl transition-all duration-300 ${
                           isHovered ? 'scale-110' : 'scale-100'
                         }`}
                         style={{ backgroundColor: project.color }}
                       >
-                        <IconComponent className="w-6 h-6 text-white" />
+                        <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                       </div>
                       
                       <div className="flex-1">
-                        <h4 className="text-lg font-bold mb-2" style={{ color: '#011936' }}>{project.title}</h4>
+                        <h4 className="text-base sm:text-lg font-bold mb-2" style={{ color: '#011936' }}>{project.title}</h4>
                         <p className="text-gray-600 text-sm leading-relaxed">{project.description}</p>
                         
                         {isHovered && (
-                          <div className="mt-4 flex items-center text-xs font-medium animate-fadeIn" style={{ color: project.color }}>
+                          <div className="mt-3 sm:mt-4 flex items-center text-xs font-medium animate-fadeIn" style={{ color: project.color }}>
                             <span>Learn More</span>
-                            <svg className="w-4 h-4 ml-1 transition-transform duration-300 transform translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-3 h-3 sm:w-4 sm:h-4 ml-1 transition-transform duration-300 transform translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
                             </svg>
                           </div>
@@ -365,17 +422,16 @@ const AboutMe = () => {
             </div>
 
             {/* Call to Action */}
-            <div className="mt-8 p-6 bg-white rounded-xl border-2 border-dashed border-gray-300 text-center hover:border-solid transition-all duration-300 cursor-pointer"
-                 style={{'--hover-border-color': '#011936'}}
+            <div className="mt-6 sm:mt-8 p-4 sm:p-6 bg-white rounded-xl border-2 border-dashed border-gray-300 text-center hover:border-solid transition-all duration-300 cursor-pointer"
                  onMouseEnter={(e) => e.target.style.borderColor = '#011936'}
                  onMouseLeave={(e) => e.target.style.borderColor = ''}>
               <div className="flex flex-col items-center space-y-3">
-                <div className="w-12 h-12 rounded-full flex items-center justify-center bg-gray-100">
-                  <Briefcase className="w-6 h-6 text-gray-600" />
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center bg-gray-100">
+                  <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-800">Ready to Collaborate?</h4>
-                  <p className="text-gray-600 text-sm">Let's build something amazing together</p>
+                  <h4 className="font-semibold text-gray-800 text-sm sm:text-base">Ready to Collaborate?</h4>
+                  <p className="text-gray-600 text-xs sm:text-sm">Let's build something amazing together</p>
                 </div>
               </div>
             </div>

@@ -8,12 +8,33 @@ const Navbar = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  // Smooth scroll function
+  const smoothScrollTo = (elementId) => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      const navbarHeight = 80; // Height of the sticky navbar
+      const elementPosition = element.offsetTop - navbarHeight;
+      
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  // Handle navigation click
+  const handleNavClick = (e, targetId) => {
+    e.preventDefault();
+    smoothScrollTo(targetId);
+    setIsMenuOpen(false); // Close mobile menu
+  };
+
   const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'About Me', href: '#about' },
-    { name: 'Skills', href: '#skills' },
-    { name: 'Projects', href: '#projects' },
-    { name: 'Contact', href: '#contact' }
+    { name: 'Home', href: '#home', id: 'home' },
+    { name: 'About Me', href: '#about', id: 'about' },
+    { name: 'Skills', href: '#skills', id: 'skills' },
+    { name: 'Projects', href: '#projects', id: 'projects' },
+    { name: 'Contact', href: '#contact', id: 'contact' }
   ];
 
   return (
@@ -22,7 +43,10 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-20">
           {/* Logo and Brand */}
           <div className="flex items-center space-x-3">
-            <div className="w-15 h-15 flex items-center justify-center">
+            <div 
+              className="w-15 h-15 flex items-center justify-center cursor-pointer"
+              onClick={(e) => handleNavClick(e, 'home')}
+            >
               <img 
                 src="/src/assets/LOGO - JM.png" 
                 alt="Logo" 
@@ -37,7 +61,8 @@ const Navbar = () => {
               <a
                 key={item.name}
                 href={item.href}
-                className="relative px-3 py-2 text-base font-medium transition-all duration-300 ease-in-out group"
+                onClick={(e) => handleNavClick(e, item.id)}
+                className="relative px-3 py-2 text-base font-medium transition-all duration-300 ease-in-out group cursor-pointer"
                 style={{ 
                   color: '#011936',
                   textShadow: 'none'
@@ -83,8 +108,8 @@ const Navbar = () => {
               <a
                 key={item.name}
                 href={item.href}
-                onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-3 text-base font-medium rounded-lg transition-all duration-200 hover:bg-gray-50 relative group"
+                onClick={(e) => handleNavClick(e, item.id)}
+                className="block px-4 py-3 text-base font-medium rounded-lg transition-all duration-200 hover:bg-gray-50 relative group cursor-pointer"
                 style={{ 
                   color: '#011936',
                   textShadow: 'none'

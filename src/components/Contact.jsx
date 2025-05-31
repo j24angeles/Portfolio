@@ -218,7 +218,7 @@ const Contact = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors text-gray-900 placeholder-gray-500"
                     style={{ '--tw-ring-color': '#465775' }}
                     placeholder="Enter your full name"
                     required
@@ -236,7 +236,7 @@ const Contact = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors text-gray-900 placeholder-gray-500"
                     style={{ '--tw-ring-color': '#465775' }}
                     placeholder="Enter your email address"
                     required
@@ -254,7 +254,7 @@ const Contact = () => {
                     name="subject"
                     value={formData.subject}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors text-gray-900 placeholder-gray-500"
                     style={{ '--tw-ring-color': '#465775' }}
                     placeholder="What's this about?"
                   />
@@ -271,7 +271,7 @@ const Contact = () => {
                     value={formData.message}
                     onChange={handleInputChange}
                     rows="5"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors resize-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors resize-none text-gray-900 placeholder-gray-500"
                     style={{ '--tw-ring-color': '#465775' }}
                     placeholder="Tell me about your project or just say hello!"
                     required
@@ -340,7 +340,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <p className="font-medium text-gray-800">Email</p>
-                    <p className="text-gray-600">your.email@example.com</p>
+                    <p className="text-gray-600">joaquinmiguel.ja@gmail.com</p>
                   </div>
                 </div>
 
@@ -350,7 +350,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <p className="font-medium text-gray-800">Phone</p>
-                    <p className="text-gray-600">+63 (123) 456-7890</p>
+                    <p className="text-gray-600">+63 915 756 0659</p>
                   </div>
                 </div>
 
@@ -360,7 +360,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <p className="font-medium text-gray-800">Location</p>
-                    <p className="text-gray-600">San Fernando, Ilocos, Philippines</p>
+                    <p className="text-gray-600">Antipolo City, Rizal, Philippines</p>
                   </div>
                 </div>
               </div>
@@ -372,7 +372,8 @@ const Contact = () => {
                 Connect With Me
               </h3>
               
-              <div className="grid grid-cols-2 gap-4 mb-6">
+              {/* Improved responsive grid - single column on mobile, 2 columns on larger screens */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                 {socialLinks.map((social, index) => {
                   const IconComponent = social.icon;
                   return (
@@ -383,16 +384,17 @@ const Contact = () => {
                       rel="noopener noreferrer"
                       className={`group flex items-center space-x-3 p-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-all duration-300 transform hover:scale-105 ${social.color}`}
                     >
-                      <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white transition-colors" style={{ backgroundColor: '#465775' }}>
+                      {/* Icon container with more breathing room */}
+                      <div className="w-10 h-10 rounded-lg flex items-center justify-center text-white transition-colors flex-shrink-0" style={{ backgroundColor: '#465775' }}>
                         <IconComponent className="w-5 h-5" />
                       </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-800 group-hover:text-gray-900">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-gray-800 group-hover:text-gray-900 truncate">
                           {social.name}
                         </p>
                         <div className="flex items-center text-sm text-gray-500">
                           <span>Connect</span>
-                          <ExternalLink className="w-3 h-3 ml-1" />
+                          <ExternalLink className="w-3 h-3 ml-1 flex-shrink-0" />
                         </div>
                       </div>
                     </a>

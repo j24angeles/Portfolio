@@ -29,6 +29,20 @@ const Home = () => {
     }
   ];
 
+  // Function to scroll to projects section (matching navbar's smooth scroll)
+  const scrollToProjects = () => {
+    const element = document.getElementById('projects');
+    if (element) {
+      const navbarHeight = 80; // Height of the sticky navbar
+      const elementPosition = element.offsetTop - navbarHeight;
+      
+      window.scrollTo({
+        top: elementPosition,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   // Function to handle resume download with error handling
   const handleDownloadResume = () => {
     try {
@@ -107,6 +121,7 @@ const Home = () => {
             {/* Call to Action */}
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center lg:justify-start pt-2">
               <button 
+                onClick={scrollToProjects}
                 className="px-6 py-3 sm:px-8 sm:py-4 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300"
                 style={{ backgroundColor: '#011936' }}
               >
