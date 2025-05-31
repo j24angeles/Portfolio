@@ -47,7 +47,7 @@ const Home = () => {
   const handleDownloadResume = () => {
     try {
       // Path to your resume in the public folder
-      const resumeUrl = '/src/assets/ANGELES_CV.pdf';
+      const resumeUrl = 'public/ANGELES_CV.pdf';
       
       // Create a temporary anchor element
       const link = document.createElement('a');
@@ -82,7 +82,7 @@ const Home = () => {
           <div className="flex justify-center lg:hidden order-1">
             <div className="relative">
               <img 
-                src="src/assets/icon.png" 
+                src="public/icon.png" 
                 alt="Joaquin" 
                 className="w-64 h-80 sm:w-72 sm:h-88 object-cover rounded-2xl hover:scale-105 transition-transform duration-300"
                 style={{ objectPosition: 'center top' }}
@@ -174,7 +174,7 @@ const Home = () => {
           <div className="hidden lg:flex justify-center lg:justify-end order-1 lg:order-2">
             <div className="relative">
               <img 
-                src="src/assets/icon.png" 
+                src="public/icon.png" 
                 alt="Joaquin" 
                 className="w-112 h-128 xl:w-120 xl:h-136 object-cover rounded-2xl hover:scale-105 transition-transform duration-300"
                 style={{ objectPosition: 'center top' }}
