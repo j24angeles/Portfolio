@@ -66,6 +66,10 @@ const Projects = () => {
     }
   ];
 
+  const handleGitHubClick = () => {
+  window.open('https://github.com/j24angeles', '_blank', 'noopener,noreferrer');
+};
+
   const getTechStackColor = (tech) => {
     const colors = {
       'React': '#5B7C99',          // Darker pastel blue
@@ -274,11 +278,14 @@ const Projects = () => {
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
           }`}
         >
-          <button className="inline-flex items-center space-x-3 px-8 py-4 bg-gray-800 text-white rounded-xl font-medium hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 shadow-lg">
-            <Github className="w-5 h-5" />
-            <span>View All Projects on GitHub</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
+         <button 
+  className="inline-flex items-center space-x-3 px-8 py-4 bg-gray-800 text-white rounded-xl font-medium hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+  onClick={handleGitHubClick}
+>
+  <Github className="w-5 h-5" />
+  <span>View All Projects on GitHub</span>
+  <ArrowRight className="w-4 h-4" />
+</button>
         </div>
 
         {/* Image Preview Modal */}

@@ -71,7 +71,7 @@ const Skills = () => {
       ]
     },
     soft: {
-      title: 'Professional Skills',
+      title: 'Soft Skills',
       icon: Heart,
       color: '#8BADCE',
       skills: [
@@ -307,8 +307,7 @@ const Skills = () => {
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
           }`}
         >
-          <div className="inline-flex items-center space-x-2 px-6 py-3 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-200 transition-colors cursor-pointer">
-            <Globe className="w-4 h-4" />
+          <div className="inline-flex items-center space-x-2 px-6 py-3 bg-gray-100 rounded-full text-gray-600 hover:bg-gray-200 transition-colors">
             <span className="text-sm font-medium">Always learning and growing</span>
           </div>
         </div>
