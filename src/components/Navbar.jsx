@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import LOGO from '../assets/LOGO - JM.png'; 
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -48,7 +49,7 @@ const Navbar = () => {
               onClick={(e) => handleNavClick(e, 'home')}
             >
               <img 
-                src="/src/assets/LOGO - JM.png" 
+                src={LOGO} 
                 alt="Logo" 
                 className="w-full h-full object-contain"
               />
