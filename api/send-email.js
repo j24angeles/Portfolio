@@ -1,17 +1,19 @@
-// api/send-email.js
 import nodemailer from 'nodemailer';
 
-// Configure CORS headers
+// CORS headers for all responses
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization, Accept, Origin, X-Requested-With',
 };
 
 export default async function handler(req, res) {
-  // Handle preflight OPTIONS request
+  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    return res.status(200).json({});
+    return res.status(200).setHeader('Access-Control-Allow-Origin', '*')
+                          .setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+                          .setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, Origin, X-Requested-With')
+                          .end();
   }
 
   // Only allow POST requests
@@ -21,11 +23,6 @@ export default async function handler(req, res) {
       message: 'Method not allowed'
     });
   }
-
-  // Set CORS headers
-  Object.entries(corsHeaders).forEach(([key, value]) => {
-    res.setHeader(key, value);
-  });
 
   try {
     const { name, email, subject, message } = req.body;
@@ -47,12 +44,12 @@ export default async function handler(req, res) {
       });
     }
 
-    // Create email transporter
+    // Create transporter
     const transporter = nodemailer.createTransporter({
       service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS // Use App Password for Gmail
+        pass: process.env.EMAIL_PASS // App Password for Gmail
       }
     });
 
@@ -105,7 +102,7 @@ export default async function handler(req, res) {
     
     console.log('Message sent: %s', info.messageId);
     
-    // Optional: Send confirmation email to the sender
+    // Optional: Send confirmation email
     if (process.env.SEND_CONFIRMATION === 'true') {
       const confirmationOptions = {
         from: `"${process.env.YOUR_NAME || 'Portfolio'}" <${process.env.EMAIL_USER}>`,
@@ -128,6 +125,11 @@ export default async function handler(req, res) {
       await transporter.sendMail(confirmationOptions);
     }
 
+    // Set CORS headers and return success response
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      res.setHeader(key, value);
+    });
+
     return res.status(200).json({
       success: true,
       message: 'Email sent successfully'
@@ -135,6 +137,11 @@ export default async function handler(req, res) {
 
   } catch (error) {
     console.error('Error sending email:', error);
+    
+    // Set CORS headers for error response too
+    Object.entries(corsHeaders).forEach(([key, value]) => {
+      res.setHeader(key, value);
+    });
     
     return res.status(500).json({
       success: false,
