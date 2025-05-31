@@ -15,7 +15,7 @@ import {
   Instagram,
   ExternalLink
 } from 'lucide-react';
-import api from '../api/send-email.js'; // Using the imported API
+import api from '../../api/send-email.js'; // Using the imported API
 
 const Contact = () => {
   const [isVisible, setIsVisible] = useState(false);
