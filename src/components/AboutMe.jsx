@@ -28,7 +28,7 @@ const AboutMe = () => {
       icon: Award,
       color: "#011936",
       description: "Focused on Science, Technology, Engineering, and Mathematics. Built a strong foundation in analytical thinking and problem-solving.",
-      location: "Manila, Philippines"
+      location: "Antipolo City, Rizal, Philippines"
     },
     {
       year: "2022-Present",
@@ -372,9 +372,6 @@ const AboutMe = () => {
           >
             <div className="flex items-center justify-between mb-6 sm:mb-8">
               <h3 className="text-xl sm:text-2xl font-bold" style={{ color: '#011936' }}>Project Highlights</h3>
-              <span className="text-xs sm:text-sm text-gray-500 bg-gray-100 px-2 sm:px-3 py-1 rounded-full">
-                View More →
-              </span>
             </div>
             
             <div className="space-y-4">

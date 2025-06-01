@@ -153,7 +153,7 @@ const Home = () => {
                 }}
                 onClick={handleDownloadResume}
               >
-                Download Resume
+                Download my CV
               </button>
             </div>
 

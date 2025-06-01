@@ -525,7 +525,7 @@ const Contact = () => {
                 <span>Email Me</span>
               </a>
               <a 
-                href="#contact"
+                href="https;//facebook.com/j24angeles"
                 className="inline-flex items-center space-x-2 px-6 py-3 border-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:text-white"
                 style={{ 
                   borderColor: '#011936', 
