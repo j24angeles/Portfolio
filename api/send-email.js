@@ -26,20 +26,17 @@ export default async function handler(req, res) {
   }
 
   try {
-    // More detailed environment variable checking
+    // Environment variable checking
     console.log('Environment check:');
     console.log('- RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
     console.log('- API Key prefix:', process.env.RESEND_API_KEY ? process.env.RESEND_API_KEY.substring(0, 5) + '...' : 'not found');
-    console.log('- RECIPIENT_EMAIL:', process.env.RECIPIENT_EMAIL || 'using default');
-    console.log('- NODE_ENV:', process.env.NODE_ENV || 'not set');
 
     // Check if API key exists
     if (!process.env.RESEND_API_KEY) {
       console.error('RESEND_API_KEY environment variable is not set');
       return res.status(500).json({
         success: false,
-        message: 'Email service configuration error - API key missing',
-        debug: process.env.NODE_ENV === 'development' ? 'RESEND_API_KEY not found in environment' : undefined
+        message: 'Email service configuration error - API key missing'
       });
     }
 
@@ -48,8 +45,7 @@ export default async function handler(req, res) {
       console.error('Invalid RESEND_API_KEY format');
       return res.status(500).json({
         success: false,
-        message: 'Email service configuration error - invalid API key format',
-        debug: process.env.NODE_ENV === 'development' ? 'API key should start with re_' : undefined
+        message: 'Email service configuration error - invalid API key format'
       });
     }
 
@@ -89,9 +85,9 @@ export default async function handler(req, res) {
     const sanitizedSubject = subject ? subject.trim().substring(0, 200) : '';
     const sanitizedMessage = message.trim().substring(0, 2000);
 
-    // You need to use a verified domain with Resend, not onboarding@resend.dev
-    // Replace 'yourdomain.com' with your actual verified domain
-    const fromEmail = process.env.FROM_EMAIL || 'noreply@yourdomain.com';
+    // FIXED: Use Resend's sandbox domain for testing
+    // For production, replace with your verified domain
+    const fromEmail = process.env.FROM_EMAIL || 'onboarding@resend.dev';
     
     // Prepare email data
     const emailData = {
@@ -159,17 +155,26 @@ This message was sent from your portfolio contact form on ${new Date().toLocaleS
       `
     };
 
-    console.log('Attempting to send email...');
+    console.log('Attempting to send email with data:', {
+      from: emailData.from,
+      to: emailData.to,
+      subject: emailData.subject
+    });
 
     // Send email using Resend
     const { data, error } = await resend.emails.send(emailData);
 
     if (error) {
-      console.error('Resend API error:', error);
+      console.error('Resend API error details:', {
+        message: error.message,
+        name: error.name,
+        ...error
+      });
+      
       return res.status(400).json({
         success: false,
         message: 'Failed to send email. Please try again later.',
-        error: process.env.NODE_ENV === 'development' ? error : undefined
+        debug: process.env.NODE_ENV === 'development' ? error : undefined
       });
     }
 
@@ -185,7 +190,6 @@ This message was sent from your portfolio contact form on ${new Date().toLocaleS
   } catch (error) {
     console.error('Unexpected error in send-email handler:', error);
     
-    // Don't expose internal errors in production
     const errorMessage = process.env.NODE_ENV === 'development' 
       ? error.message 
       : 'An unexpected error occurred. Please try again later.';
