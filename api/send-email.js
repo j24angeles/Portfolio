@@ -44,7 +44,7 @@ export default async function handler(req, res) {
 
     // Send email using Resend
     const emailData = await resend.emails.send({
-      from: 'Portfolio Contact <noreply@yourdomain.com>', // Replace with your verified domain
+      from: 'Portfolio Contact <onboarding@resend.dev>', // Replace with your verified domain
       to: ['joaquinmiguel.ja@gmail.com'],
       subject: subject ? `Portfolio Contact: ${subject}` : 'New Portfolio Contact Message',
       html: `
