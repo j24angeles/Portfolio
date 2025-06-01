@@ -4,7 +4,10 @@
       "maxDuration": 10
     }
   },
-  "env": {
-    "RESEND_API_KEY": "@resend_api_key"
-  }
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    }
+  ]
 }
