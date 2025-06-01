@@ -88,11 +88,9 @@ const Contact = () => {
       newErrors.subject = 'Subject must be less than 200 characters';
     }
 
-    // Message validation
+    // Message validation - removed minimum character requirement
     if (!data.message.trim()) {
       newErrors.message = 'Message is required';
-    } else if (data.message.trim().length < 10) {
-      newErrors.message = 'Message must be at least 10 characters long';
     } else if (data.message.trim().length > 2000) {
       newErrors.message = 'Message must be less than 2000 characters';
     }
@@ -150,45 +148,81 @@ const Contact = () => {
       return;
     }
 
-   
-  try {
-    const response = await fetch('/api/send-email', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name: formData.name.trim(),
-        email: formData.email.trim(),
-        subject: formData.subject.trim(),
-        message: formData.message.trim()
-      })
-    });
+    try {
+      console.log('Submitting form data:', trimmedData);
+      
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(trimmedData)
+      });
 
-    const result = await response.json();
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
 
-    if (!response.ok) {
-      throw new Error(result.message || 'Failed to send message');
+      let result;
+      try {
+        result = await response.json();
+        console.log('Response data:', result);
+      } catch (parseError) {
+        console.error('Failed to parse response as JSON:', parseError);
+        throw new Error('Invalid response from server');
+      }
+
+      if (response.ok && result.success) {
+        setFormStatus('success');
+        setStatusMessage(result.message || 'Message sent successfully! I\'ll get back to you soon.');
+        
+        // Clear form on success
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+        
+        // Auto-clear success message after 5 seconds
+        setTimeout(() => {
+          setFormStatus('');
+          setStatusMessage('');
+        }, 5000);
+        
+      } else {
+        // Handle server errors
+        setFormStatus('error');
+        
+        if (result.message) {
+          setStatusMessage(result.message);
+        } else if (response.status === 400) {
+          setStatusMessage('Please check your input and try again.');
+        } else if (response.status === 500) {
+          setStatusMessage('Server error. Please try again later.');
+        } else {
+          setStatusMessage('Failed to send message. Please try again.');
+        }
+        
+        // Log detailed error for debugging
+        console.error('Server error:', {
+          status: response.status,
+          result: result,
+          debug: result.debug
+        });
+      }
+    } catch (error) {
+      console.error('Network/fetch error:', error);
+      setFormStatus('error');
+      
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        setStatusMessage('Network error. Please check your connection and try again.');
+      } else {
+        setStatusMessage('An unexpected error occurred. Please try again later.');
+      }
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setFormStatus('success');
-    setStatusMessage(result.message || 'Message sent successfully!');
-    
-    // Clear form
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    });
-
-  } catch (error) {
-    setFormStatus('error');
-    setStatusMessage(error.message || 'Failed to send message');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   return (
     <section 
@@ -491,7 +525,7 @@ const Contact = () => {
                 <span>Email Me</span>
               </a>
               <a 
-                href="#"
+                href="#contact"
                 className="inline-flex items-center space-x-2 px-6 py-3 border-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:text-white"
                 style={{ 
                   borderColor: '#011936', 
