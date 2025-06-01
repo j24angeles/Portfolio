@@ -45,7 +45,7 @@ const Skills = () => {
         { name: 'Angular', icon: Layers, level: 'Intermediate', description: 'Enterprise-grade applications' },
         { name: 'Next.js', icon: Globe, level: 'Beginner', description: 'Full-stack React framework' },
         { name: 'JavaScript', icon: FileText, level: 'Advanced', description: 'Modern ES6+ development' },
-        { name: 'HTML/CSS', icon: Monitor, level: 'Expert', description: 'Semantic markup & styling' }
+        { name: 'HTML/CSS', icon: Monitor, level: 'Advanced', description: 'Semantic markup & styling' }
       ]
     },
     backend: {
