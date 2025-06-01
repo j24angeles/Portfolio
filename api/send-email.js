@@ -19,6 +19,7 @@ export default async function handler(req, res) {
 
   // Only allow POST requests
   if (req.method !== 'POST') {
+    console.log('Method not allowed:', req.method);
     return res.status(405).json({ 
       success: false, 
       message: 'Method not allowed. Only POST requests are accepted.' 
@@ -26,56 +27,71 @@ export default async function handler(req, res) {
   }
 
   try {
+    console.log('=== EMAIL API DEBUG START ===');
+    console.log('Request method:', req.method);
+    console.log('Request headers:', JSON.stringify(req.headers, null, 2));
+    console.log('Request body:', JSON.stringify(req.body, null, 2));
+
     // Environment variable checking
-    console.log('Environment check:');
+    console.log('Environment variables check:');
     console.log('- RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
-    console.log('- API Key prefix:', process.env.RESEND_API_KEY ? process.env.RESEND_API_KEY.substring(0, 5) + '...' : 'not found');
+    console.log('- RESEND_API_KEY length:', process.env.RESEND_API_KEY?.length || 0);
+    console.log('- API Key prefix:', process.env.RESEND_API_KEY ? process.env.RESEND_API_KEY.substring(0, 8) + '...' : 'not found');
+    console.log('- NODE_ENV:', process.env.NODE_ENV);
+    console.log('- RECIPIENT_EMAIL:', process.env.RECIPIENT_EMAIL || 'not set');
+    console.log('- FROM_EMAIL:', process.env.FROM_EMAIL || 'not set');
 
     // Check if API key exists
     if (!process.env.RESEND_API_KEY) {
-      console.error('RESEND_API_KEY environment variable is not set');
+      console.error('❌ RESEND_API_KEY environment variable is not set');
       return res.status(500).json({
         success: false,
-        message: 'Email service configuration error - API key missing'
+        message: 'Email service configuration error - API key missing',
+        debug: 'RESEND_API_KEY environment variable not found'
       });
     }
 
     // Validate API key format
     if (!process.env.RESEND_API_KEY.startsWith('re_')) {
-      console.error('Invalid RESEND_API_KEY format');
+      console.error('❌ Invalid RESEND_API_KEY format');
       return res.status(500).json({
         success: false,
-        message: 'Email service configuration error - invalid API key format'
+        message: 'Email service configuration error - invalid API key format',
+        debug: 'API key should start with re_'
       });
     }
 
-    // Initialize Resend
-    const resend = new Resend(process.env.RESEND_API_KEY);
-
     // Extract and validate request body
-    const { name, email, subject, message } = req.body;
+    const { name, email, subject, message } = req.body || {};
 
-    console.log('Received data:', { 
-      name: name ? 'provided' : 'missing', 
-      email: email ? 'provided' : 'missing', 
-      subject: subject ? 'provided' : 'empty', 
-      message: message ? 'provided' : 'missing' 
-    });
+    console.log('Form data received:');
+    console.log('- name:', name ? `"${name}" (${name.length} chars)` : 'MISSING');
+    console.log('- email:', email ? `"${email}" (${email.length} chars)` : 'MISSING');
+    console.log('- subject:', subject ? `"${subject}" (${subject.length} chars)` : 'EMPTY');
+    console.log('- message:', message ? `"${message.substring(0, 50)}..." (${message.length} chars)` : 'MISSING');
 
     // Validation
     if (!name || !email || !message) {
+      console.error('❌ Missing required fields');
       return res.status(400).json({
         success: false,
-        message: 'Name, email, and message are required fields'
+        message: 'Name, email, and message are required fields',
+        debug: {
+          name: !!name,
+          email: !!email,
+          message: !!message
+        }
       });
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
+      console.error('❌ Invalid email format:', email);
       return res.status(400).json({
         success: false,
-        message: 'Please provide a valid email address'
+        message: 'Please provide a valid email address',
+        debug: `Email "${email}" failed regex validation`
       });
     }
 
@@ -85,14 +101,28 @@ export default async function handler(req, res) {
     const sanitizedSubject = subject ? subject.trim().substring(0, 200) : '';
     const sanitizedMessage = message.trim().substring(0, 2000);
 
-    // FIXED: Use Resend's sandbox domain for testing
-    // For production, replace with your verified domain
-    const fromEmail = process.env.FROM_EMAIL || 'onboarding@resend.dev';
+    console.log('Sanitized data:');
+    console.log('- sanitizedName:', sanitizedName);
+    console.log('- sanitizedEmail:', sanitizedEmail);
+    console.log('- sanitizedSubject:', sanitizedSubject);
+    console.log('- sanitizedMessage length:', sanitizedMessage.length);
+
+    // Use Resend's sandbox domain
+    const fromEmail = 'onboarding@resend.dev';
+    const toEmail = process.env.RECIPIENT_EMAIL || 'joaquinmiguel.ja@gmail.com';
+    
+    console.log('Email configuration:');
+    console.log('- fromEmail:', fromEmail);
+    console.log('- toEmail:', toEmail);
+
+    // Initialize Resend
+    console.log('Initializing Resend...');
+    const resend = new Resend(process.env.RESEND_API_KEY);
     
     // Prepare email data
     const emailData = {
       from: `Portfolio Contact <${fromEmail}>`,
-      to: [process.env.RECIPIENT_EMAIL || 'joaquinmiguel.ja@gmail.com'],
+      to: [toEmail],
       subject: sanitizedSubject || `New Contact Form Message from ${sanitizedName}`,
       replyTo: sanitizedEmail,
       html: `
@@ -155,30 +185,38 @@ This message was sent from your portfolio contact form on ${new Date().toLocaleS
       `
     };
 
-    console.log('Attempting to send email with data:', {
-      from: emailData.from,
-      to: emailData.to,
-      subject: emailData.subject
-    });
+    console.log('Email data prepared:');
+    console.log('- from:', emailData.from);
+    console.log('- to:', emailData.to);
+    console.log('- subject:', emailData.subject);
+    console.log('- replyTo:', emailData.replyTo);
+    console.log('- HTML length:', emailData.html.length);
+    console.log('- Text length:', emailData.text.length);
+
+    console.log('Attempting to send email via Resend...');
 
     // Send email using Resend
     const { data, error } = await resend.emails.send(emailData);
 
     if (error) {
-      console.error('Resend API error details:', {
-        message: error.message,
-        name: error.name,
-        ...error
-      });
+      console.error('❌ Resend API error:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
       
       return res.status(400).json({
         success: false,
         message: 'Failed to send email. Please try again later.',
-        debug: process.env.NODE_ENV === 'development' ? error : undefined
+        debug: {
+          error: error,
+          apiKeyExists: !!process.env.RESEND_API_KEY,
+          apiKeyFormat: process.env.RESEND_API_KEY?.startsWith('re_') || false
+        }
       });
     }
 
-    console.log('Email sent successfully:', data?.id);
+    console.log('✅ Email sent successfully!');
+    console.log('Response data:', data);
+    console.log('Email ID:', data?.id);
+    console.log('=== EMAIL API DEBUG END ===');
 
     // Success response
     res.status(200).json({
@@ -188,15 +226,19 @@ This message was sent from your portfolio contact form on ${new Date().toLocaleS
     });
 
   } catch (error) {
-    console.error('Unexpected error in send-email handler:', error);
+    console.error('❌ Unexpected error in send-email handler:', error);
+    console.error('Error stack:', error.stack);
+    console.log('=== EMAIL API DEBUG END (ERROR) ===');
     
-    const errorMessage = process.env.NODE_ENV === 'development' 
-      ? error.message 
-      : 'An unexpected error occurred. Please try again later.';
+    const errorMessage = 'An unexpected error occurred. Please try again later.';
 
     res.status(500).json({
       success: false,
-      message: errorMessage
+      message: errorMessage,
+      debug: {
+        error: error.message,
+        stack: error.stack
+      }
     });
   }
 }
