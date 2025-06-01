@@ -26,12 +26,30 @@ export default async function handler(req, res) {
   }
 
   try {
+    // More detailed environment variable checking
+    console.log('Environment check:');
+    console.log('- RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
+    console.log('- API Key prefix:', process.env.RESEND_API_KEY ? process.env.RESEND_API_KEY.substring(0, 5) + '...' : 'not found');
+    console.log('- RECIPIENT_EMAIL:', process.env.RECIPIENT_EMAIL || 'using default');
+    console.log('- NODE_ENV:', process.env.NODE_ENV || 'not set');
+
     // Check if API key exists
     if (!process.env.RESEND_API_KEY) {
       console.error('RESEND_API_KEY environment variable is not set');
       return res.status(500).json({
         success: false,
-        message: 'Email service configuration error'
+        message: 'Email service configuration error - API key missing',
+        debug: process.env.NODE_ENV === 'development' ? 'RESEND_API_KEY not found in environment' : undefined
+      });
+    }
+
+    // Validate API key format
+    if (!process.env.RESEND_API_KEY.startsWith('re_')) {
+      console.error('Invalid RESEND_API_KEY format');
+      return res.status(500).json({
+        success: false,
+        message: 'Email service configuration error - invalid API key format',
+        debug: process.env.NODE_ENV === 'development' ? 'API key should start with re_' : undefined
       });
     }
 
