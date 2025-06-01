@@ -26,6 +26,8 @@ const Contact = () => {
   });
   const [formStatus, setFormStatus] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [statusMessage, setStatusMessage] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 200);
@@ -59,18 +61,75 @@ const Contact = () => {
     }
   ];
 
+  const validateForm = (data) => {
+    const newErrors = {};
+    
+    // Name validation
+    if (!data.name.trim()) {
+      newErrors.name = 'Name is required';
+    } else if (data.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters long';
+    } else if (data.name.trim().length > 100) {
+      newErrors.name = 'Name must be less than 100 characters';
+    }
+
+    // Email validation
+    if (!data.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(data.email.trim())) {
+        newErrors.email = 'Please enter a valid email address';
+      }
+    }
+
+    // Subject validation (optional but with length limit)
+    if (data.subject.trim().length > 200) {
+      newErrors.subject = 'Subject must be less than 200 characters';
+    }
+
+    // Message validation
+    if (!data.message.trim()) {
+      newErrors.message = 'Message is required';
+    } else if (data.message.trim().length < 10) {
+      newErrors.message = 'Message must be at least 10 characters long';
+    } else if (data.message.trim().length > 2000) {
+      newErrors.message = 'Message must be less than 2000 characters';
+    }
+
+    return newErrors;
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: value
     }));
+
+    // Clear specific field error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+
+    // Clear general status when user makes changes
+    if (formStatus) {
+      setFormStatus('');
+      setStatusMessage('');
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Reset previous states
     setIsSubmitting(true);
     setFormStatus('');
+    setStatusMessage('');
+    setErrors({});
 
     // Trim whitespace from form data
     const trimmedData = {
@@ -80,22 +139,20 @@ const Contact = () => {
       message: formData.message.trim()
     };
 
-    // Basic validation - check if required fields are not empty after trimming
-    if (!trimmedData.name || !trimmedData.email || !trimmedData.message) {
+    // Validate form
+    const validationErrors = validateForm(trimmedData);
+    
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       setFormStatus('error');
-      setIsSubmitting(false);
-      return;
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(trimmedData.email)) {
-      setFormStatus('error');
+      setStatusMessage('Please fix the errors below and try again.');
       setIsSubmitting(false);
       return;
     }
 
     try {
+      console.log('Submitting form data:', trimmedData);
+      
       const response = await fetch('/api/send-email', {
         method: 'POST',
         headers: {
@@ -104,23 +161,66 @@ const Contact = () => {
         body: JSON.stringify(trimmedData)
       });
 
-      const result = await response.json();
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+
+      let result;
+      try {
+        result = await response.json();
+        console.log('Response data:', result);
+      } catch (parseError) {
+        console.error('Failed to parse response as JSON:', parseError);
+        throw new Error('Invalid response from server');
+      }
 
       if (response.ok && result.success) {
         setFormStatus('success');
+        setStatusMessage(result.message || 'Message sent successfully! I\'ll get back to you soon.');
+        
+        // Clear form on success
         setFormData({
           name: '',
           email: '',
           subject: '',
           message: ''
         });
+        
+        // Auto-clear success message after 5 seconds
+        setTimeout(() => {
+          setFormStatus('');
+          setStatusMessage('');
+        }, 5000);
+        
       } else {
+        // Handle server errors
         setFormStatus('error');
-        console.error('Server error:', result.message || result.error);
+        
+        if (result.message) {
+          setStatusMessage(result.message);
+        } else if (response.status === 400) {
+          setStatusMessage('Please check your input and try again.');
+        } else if (response.status === 500) {
+          setStatusMessage('Server error. Please try again later.');
+        } else {
+          setStatusMessage('Failed to send message. Please try again.');
+        }
+        
+        // Log detailed error for debugging
+        console.error('Server error:', {
+          status: response.status,
+          result: result,
+          debug: result.debug
+        });
       }
     } catch (error) {
-      console.error('Network error:', error);
+      console.error('Network/fetch error:', error);
       setFormStatus('error');
+      
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        setStatusMessage('Network error. Please check your connection and try again.');
+      } else {
+        setStatusMessage('An unexpected error occurred. Please try again later.');
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -169,7 +269,7 @@ const Contact = () => {
                 </h3>
               </div>
 
-              <div className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Name Field */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -181,11 +281,18 @@ const Contact = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors text-gray-900 placeholder-gray-500"
-                    style={{ '--tw-ring-color': '#465775' }}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors text-gray-900 placeholder-gray-500 ${
+                      errors.name ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                    }`}
                     placeholder="Enter your full name"
-                    required
+                    disabled={isSubmitting}
                   />
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-red-600 flex items-center">
+                      <AlertCircle className="w-4 h-4 mr-1" />
+                      {errors.name}
+                    </p>
+                  )}
                 </div>
 
                 {/* Email Field */}
@@ -199,11 +306,18 @@ const Contact = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors text-gray-900 placeholder-gray-500"
-                    style={{ '--tw-ring-color': '#465775' }}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors text-gray-900 placeholder-gray-500 ${
+                      errors.email ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                    }`}
                     placeholder="Enter your email address"
-                    required
+                    disabled={isSubmitting}
                   />
+                  {errors.email && (
+                    <p className="mt-1 text-sm text-red-600 flex items-center">
+                      <AlertCircle className="w-4 h-4 mr-1" />
+                      {errors.email}
+                    </p>
+                  )}
                 </div>
 
                 {/* Subject Field */}
@@ -217,10 +331,18 @@ const Contact = () => {
                     name="subject"
                     value={formData.subject}
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors text-gray-900 placeholder-gray-500"
-                    style={{ '--tw-ring-color': '#465775' }}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors text-gray-900 placeholder-gray-500 ${
+                      errors.subject ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                    }`}
                     placeholder="What's this about?"
+                    disabled={isSubmitting}
                   />
+                  {errors.subject && (
+                    <p className="mt-1 text-sm text-red-600 flex items-center">
+                      <AlertCircle className="w-4 h-4 mr-1" />
+                      {errors.subject}
+                    </p>
+                  )}
                 </div>
 
                 {/* Message Field */}
@@ -234,25 +356,35 @@ const Contact = () => {
                     value={formData.message}
                     onChange={handleInputChange}
                     rows="5"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent transition-colors resize-none text-gray-900 placeholder-gray-500"
-                    style={{ '--tw-ring-color': '#465775' }}
+                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors resize-none text-gray-900 placeholder-gray-500 ${
+                      errors.message ? 'border-red-300 focus:ring-red-500' : 'border-gray-300 focus:ring-blue-500'
+                    }`}
                     placeholder="Tell me about your project or just say hello!"
-                    required
-                  ></textarea>
+                    disabled={isSubmitting}
+                  />
+                  {errors.message && (
+                    <p className="mt-1 text-sm text-red-600 flex items-center">
+                      <AlertCircle className="w-4 h-4 mr-1" />
+                      {errors.message}
+                    </p>
+                  )}
+                  <p className="mt-1 text-xs text-gray-500">
+                    {formData.message.length}/2000 characters
+                  </p>
                 </div>
 
                 {/* Status Messages */}
-                {formStatus === 'success' && (
-                  <div className="flex items-center space-x-2 p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <CheckCircle className="w-5 h-5 text-green-600" />
-                    <span className="text-green-700">Message sent successfully! I'll get back to you soon.</span>
+                {formStatus === 'success' && statusMessage && (
+                  <div className="flex items-start space-x-2 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                    <span className="text-green-700">{statusMessage}</span>
                   </div>
                 )}
 
-                {formStatus === 'error' && (
-                  <div className="flex items-center space-x-2 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <AlertCircle className="w-5 h-5 text-red-600" />
-                    <span className="text-red-700">Failed to send message. Please check your input and try again.</span>
+                {formStatus === 'error' && statusMessage && (
+                  <div className="flex items-start space-x-2 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                    <span className="text-red-700">{statusMessage}</span>
                   </div>
                 )}
 
@@ -260,10 +392,9 @@ const Contact = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  onClick={handleSubmit}
                   className={`w-full py-3 px-6 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-white shadow-lg ${
                     isSubmitting 
-                      ? 'bg-gray-400 cursor-not-allowed' 
+                      ? 'bg-gray-400 cursor-not-allowed transform-none' 
                       : 'hover:opacity-90'
                   }`}
                   style={{ backgroundColor: isSubmitting ? undefined : '#011936' }}
@@ -280,7 +411,7 @@ const Contact = () => {
                     </>
                   )}
                 </button>
-              </div>
+              </form>
             </div>
           </div>
 
