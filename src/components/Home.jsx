@@ -117,12 +117,12 @@ const Home = () => {
               <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed text-center lg:text-left">
                 A passionate <span className="font-semibold" style={{ color: '#011936' }}>Full-Stack Developer</span> who 
                 turns coffee into code and ideas into digital experiences. I love crafting elegant solutions 
-                \to complex problems and bringing creative visions to life.
+                to complex problems and bringing creative visions to life.
               </p>
               
               <p className="text-base sm:text-lg text-gray-600 leading-relaxed text-center lg:text-left">
                 When I'm not coding, you'll usually find me staying active with sports, experimenting in the kitchen with delicious recipes, 
-                diving into video games, or just enjoying the little things in life.
+                playing video games, or just enjoying the little things in life.
               </p>
             </div>
 
