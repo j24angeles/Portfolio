@@ -49,7 +49,7 @@ const Projects = () => {
     {
       id: 4,
       title: "PeraMinder: Empowering Filipinos with Financial Clarity",
-      description: "a financial tracking app to help students and young professionals manage finances and set goals.",
+      description: "A financial tracking app to help students and young professionals manage finances and set goals.",
       image: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       techStack: ['Angular', 'ASP.NET', 'MaterializeCSS', 'Chart.js', 'HeidiSQL'],
       category: "Full Stack",
@@ -58,7 +58,7 @@ const Projects = () => {
     {
       id: 5,
       title: "Sibol: A Product Showcase for Sibol Kakao, an Organic Fertilizer",
-      description: "a financial tracking app to help students and young professionals manage finances and set goals.",
+      description: "A simple mockup website to showcase the product and its benefits.",
       image: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
       techStack: ['HTML', 'CSS', 'Javascript'],
       category: "Frontend",
