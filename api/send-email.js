@@ -1,4 +1,6 @@
 // api/send-email.js
+import { Resend } from 'resend';
+
 export default async function handler(req, res) {
   // Set CORS headers
   res.setHeader('Access-Control-Allow-Credentials', true);
@@ -24,13 +26,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Log environment check (remove in production)
-    console.log('RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
-    console.log('RECIPIENT_EMAIL:', process.env.RECIPIENT_EMAIL || 'using default');
-
-    // Import Resend dynamically
-    const { Resend } = await import('resend');
-    
     // Check if API key exists
     if (!process.env.RESEND_API_KEY) {
       console.error('RESEND_API_KEY environment variable is not set');
@@ -40,12 +35,18 @@ export default async function handler(req, res) {
       });
     }
 
+    // Initialize Resend
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     // Extract and validate request body
     const { name, email, subject, message } = req.body;
 
-    console.log('Received data:', { name: !!name, email: !!email, subject: !!subject, message: !!message });
+    console.log('Received data:', { 
+      name: name ? 'provided' : 'missing', 
+      email: email ? 'provided' : 'missing', 
+      subject: subject ? 'provided' : 'empty', 
+      message: message ? 'provided' : 'missing' 
+    });
 
     // Validation
     if (!name || !email || !message) {
@@ -70,9 +71,13 @@ export default async function handler(req, res) {
     const sanitizedSubject = subject ? subject.trim().substring(0, 200) : '';
     const sanitizedMessage = message.trim().substring(0, 2000);
 
+    // You need to use a verified domain with Resend, not onboarding@resend.dev
+    // Replace 'yourdomain.com' with your actual verified domain
+    const fromEmail = process.env.FROM_EMAIL || 'noreply@yourdomain.com';
+    
     // Prepare email data
     const emailData = {
-      from: 'Portfolio Contact <onboarding@resend.dev>',
+      from: `Portfolio Contact <${fromEmail}>`,
       to: [process.env.RECIPIENT_EMAIL || 'joaquinmiguel.ja@gmail.com'],
       subject: sanitizedSubject || `New Contact Form Message from ${sanitizedName}`,
       replyTo: sanitizedEmail,
