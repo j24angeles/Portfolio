@@ -524,25 +524,27 @@ const Contact = () => {
                 <Mail className="w-4 h-4" />
                 <span>Email Me</span>
               </a>
-              <a 
-                href="https;//facebook.com/j24angeles"
-                className="inline-flex items-center space-x-2 px-6 py-3 border-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:text-white"
-                style={{ 
-                  borderColor: '#011936', 
-                  color: '#011936'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = '#011936';
-                  e.target.style.color = 'white';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = 'transparent';
-                  e.target.style.color = '#011936';
-                }}
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Let's Chat</span>
-              </a>
+            <a 
+  href="https://m.me/j24angeles"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="inline-flex items-center space-x-2 px-6 py-3 border-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:text-white"
+  style={{ 
+    borderColor: '#011936', 
+    color: '#011936'
+  }}
+  onMouseEnter={(e) => {
+    e.target.style.backgroundColor = '#011936';
+    e.target.style.color = 'white';
+  }}
+  onMouseLeave={(e) => {
+    e.target.style.backgroundColor = 'transparent';
+    e.target.style.color = '#011936';
+  }}
+>
+  <MessageCircle className="w-4 h-4" />
+  <span>Let's Chat</span>
+</a>
             </div>
           </div>
         </div>

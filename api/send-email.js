@@ -1,35 +1,30 @@
-// api/send-email.js
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export default async function handler(req, res) {
-  // Set CORS headers
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  // Handle preflight request
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
   // Only allow POST requests
   if (req.method !== 'POST') {
-    return res.status(405).json({ 
+    return res.status(405).json({ success: false, message: 'Method not allowed' });
+  }
+
+  // Validate environment variable
+  if (!process.env.RESEND_API_KEY) {
+    console.error('RESEND_API_KEY is not configured');
+    return res.status(500).json({ 
       success: false, 
-      message: 'Method not allowed' 
+      message: 'Email service not configured' 
     });
   }
 
   try {
-    const { name, email, subject, message } = req.body;
+    const { name, email, message } = req.body;
 
     // Validate required fields
     if (!name || !email || !message) {
       return res.status(400).json({ 
         success: false, 
-        message: 'Missing required fields: name, email, and message are required.' 
+        message: 'All fields are required' 
       });
     }
 
@@ -38,243 +33,224 @@ export default async function handler(req, res) {
     if (!emailRegex.test(email)) {
       return res.status(400).json({ 
         success: false, 
-        message: 'Invalid email address format.' 
+        message: 'Please enter a valid email address' 
       });
     }
 
     // Send email using Resend
     const emailData = await resend.emails.send({
-      from: 'Portfolio Contact <onboarding@resend.dev>', // Replace with your verified domain
-      to: ['joaquinmiguel.ja@gmail.com'],
-      subject: subject ? `Portfolio Contact: ${subject}` : 'New Portfolio Contact Message',
+      from: 'Contact Form <noreply@yourdomain.com>', // Replace with your verified domain
+      to: ['your-email@gmail.com'], // Replace with your email
+      subject: `New Contact Form Message from ${name}`,
       html: `
         <!DOCTYPE html>
-        <html lang="en">
+        <html>
         <head>
-          <meta charset="UTF-8">
+          <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <meta name="color-scheme" content="light dark">
-          <meta name="supported-color-schemes" content="light dark">
-          <link rel="preconnect" href="https://fonts.googleapis.com">
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-          <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-          <title>Portfolio Contact</title>
+          <title>Contact Form Message</title>
           <style>
-            /* Reset and base styles */
+            /* Reset styles */
             * {
               margin: 0;
               padding: 0;
               box-sizing: border-box;
             }
             
-            /* Dark mode styles */
+            /* Light mode styles (default) */
+            body {
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+              line-height: 1.6;
+              color: #333333;
+              background-color: #ffffff;
+              padding: 20px;
+            }
+            
+            .container {
+              max-width: 600px;
+              margin: 0 auto;
+              background-color: #ffffff;
+              border: 1px solid #e0e0e0;
+              border-radius: 8px;
+              overflow: hidden;
+            }
+            
+            .header {
+              background-color: #2563eb;
+              color: #ffffff;
+              padding: 30px 20px;
+              text-align: center;
+            }
+            
+            .header h1 {
+              font-size: 24px;
+              font-weight: 600;
+              margin: 0;
+            }
+            
+            .content {
+              padding: 30px 20px;
+              background-color: #ffffff;
+            }
+            
+            .field {
+              margin-bottom: 20px;
+              padding: 15px;
+              background-color: #f8f9fa;
+              border: 1px solid #e9ecef;
+              border-radius: 6px;
+            }
+            
+            .field-label {
+              font-weight: 600;
+              color: #495057;
+              margin-bottom: 8px;
+              font-size: 14px;
+              text-transform: uppercase;
+              letter-spacing: 0.5px;
+            }
+            
+            .field-value {
+              color: #212529;
+              font-size: 16px;
+              word-wrap: break-word;
+            }
+            
+            .message-field {
+              background-color: #f8f9fa;
+              border: 1px solid #e9ecef;
+              border-radius: 6px;
+              padding: 15px;
+            }
+            
+            .message-field .field-value {
+              white-space: pre-wrap;
+              line-height: 1.5;
+            }
+            
+            .footer {
+              padding: 20px;
+              text-align: center;
+              background-color: #f8f9fa;
+              border-top: 1px solid #e9ecef;
+              color: #6c757d;
+              font-size: 14px;
+            }
+            
+            .timestamp {
+              color: #6c757d;
+              font-size: 12px;
+              margin-top: 10px;
+            }
+            
+            /* Dark mode support using prefers-color-scheme */
             @media (prefers-color-scheme: dark) {
-              .email-container { 
-                background-color: #000000 !important; 
-                color: #ffffff !important;
+              body {
+                color: #ffffff;
+                background-color: #1a1a1a;
               }
-              .email-body { 
-                background-color: #000000 !important; 
-                border-color: #333333 !important;
+              
+              .container {
+                background-color: #2d2d2d;
+                border-color: #404040;
               }
-              .content-card { 
-                background-color: #1a1a1a !important; 
-                border-color: #333333 !important;
-                color: #ffffff !important;
+              
+              .header {
+                background-color: #1e40af;
               }
-              .section-title { 
-                color: #ffffff !important; 
-                border-color: #011936 !important;
+              
+              .content {
+                background-color: #2d2d2d;
               }
-              .label { 
-                color: #cccccc !important; 
+              
+              .field {
+                background-color: #3a3a3a;
+                border-color: #505050;
               }
-              .message-box { 
-                background-color: #2a2a2a !important; 
-                border-color: #011936 !important;
-                color: #ffffff !important;
+              
+              .field-label {
+                color: #e0e0e0;
               }
-              .info-box { 
-                background-color: #1a1a1a !important; 
-                border-color: #011936 !important;
-                color: #cccccc !important;
+              
+              .field-value {
+                color: #ffffff;
               }
-              .footer-text { 
-                color: #888888 !important; 
+              
+              .message-field {
+                background-color: #3a3a3a;
+                border-color: #505050;
               }
-            }
-            
-            /* Light mode styles */
-            @media (prefers-color-scheme: light) {
-              .email-container { 
-                background-color: #ffffff !important; 
-                color: #000000 !important;
+              
+              .footer {
+                background-color: #3a3a3a;
+                border-color: #505050;
+                color: #b0b0b0;
               }
-              .email-body { 
-                background-color: #f8f9fa !important; 
-                border-color: #e0e0e0 !important;
-              }
-              .content-card { 
-                background-color: #ffffff !important; 
-                border-color: #e0e0e0 !important;
-                color: #000000 !important;
-              }
-              .section-title { 
-                color: #011936 !important; 
-                border-color: #011936 !important;
-              }
-              .label { 
-                color: #011936 !important; 
-              }
-              .message-box { 
-                background-color: #f8f9fa !important; 
-                border-color: #011936 !important;
-                color: #000000 !important;
-              }
-              .info-box { 
-                background-color: #e8f4fd !important; 
-                border-color: #b3d9f2 !important;
-                color: #011936 !important;
-              }
-              .footer-text { 
-                color: #666666 !important; 
+              
+              .timestamp {
+                color: #b0b0b0;
               }
             }
             
-            /* Fallback for clients that don't support prefers-color-scheme */
-            .email-container { 
-              background-color: #ffffff; 
-              color: #000000;
+            /* Ensure readability in all email clients */
+            .field-value a {
+              color: #2563eb;
+              text-decoration: none;
             }
-            .email-body { 
-              background-color: #f8f9fa; 
-              border-color: #e0e0e0;
-            }
-            .content-card { 
-              background-color: #ffffff; 
-              border-color: #e0e0e0;
-              color: #000000;
-            }
-            .section-title { 
-              color: #011936; 
-              border-color: #011936;
-            }
-            .label { 
-              color: #011936; 
-            }
-            .message-box { 
-              background-color: #f8f9fa; 
-              border-color: #011936;
-              color: #000000;
-            }
-            .info-box { 
-              background-color: #e8f4fd; 
-              border-color: #b3d9f2;
-              color: #011936;
-            }
-            .footer-text { 
-              color: #666666; 
+            
+            @media (prefers-color-scheme: dark) {
+              .field-value a {
+                color: #60a5fa;
+              }
             }
           </style>
         </head>
-        <body style="margin: 0; padding: 20px; font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; line-height: 1.6;">
-          <div class="email-container" style="max-width: 650px; margin: 0 auto; border-radius: 12px; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
-            
-            <!-- Header -->
-            <div style="background: linear-gradient(135deg, #011936 0%, #000000 100%); padding: 40px 30px; text-align: center;">
-              <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 500; letter-spacing: 0.5px;">
-                📬 New Portfolio Contact
-              </h1>
-              <p style="color: rgba(255,255,255,0.8); margin: 8px 0 0 0; font-size: 16px; font-weight: 300;">
-                Someone reached out through your website
-              </p>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>New Contact Form Message</h1>
             </div>
             
-            <!-- Body -->
-            <div class="email-body" style="padding: 40px 30px; border-radius: 0 0 12px 12px; border: 1px solid; border-top: none;">
+            <div class="content">
+              <div class="field">
+                <div class="field-label">Name</div>
+                <div class="field-value">${name}</div>
+              </div>
               
-              <!-- Contact Details Card -->
-              <div class="content-card" style="padding: 30px; border-radius: 12px; margin-bottom: 24px; border: 1px solid; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                <h2 class="section-title" style="margin: 0 0 20px 0; font-size: 20px; font-weight: 500; border-bottom: 2px solid; padding-bottom: 12px; display: flex; align-items: center;">
-                  👤 Contact Information
-                </h2>
-                <div style="space-y: 16px;">
-                  <div style="margin-bottom: 16px;">
-                    <span class="label" style="font-weight: 500; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Name</span>
-                    <p style="margin: 4px 0 0 0; font-size: 16px; font-weight: 400;">${name}</p>
-                  </div>
-                  <div style="margin-bottom: 16px;">
-                    <span class="label" style="font-weight: 500; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Email</span>
-                    <p style="margin: 4px 0 0 0; font-size: 16px; font-weight: 400;">
-                      <a href="mailto:${email}" style="color: #011936; text-decoration: none; border-bottom: 1px dotted #011936;">${email}</a>
-                    </p>
-                  </div>
-                  ${subject ? `
-                  <div style="margin-bottom: 16px;">
-                    <span class="label" style="font-weight: 500; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Subject</span>
-                    <p style="margin: 4px 0 0 0; font-size: 16px; font-weight: 400;">${subject}</p>
-                  </div>
-                  ` : ''}
+              <div class="field">
+                <div class="field-label">Email</div>
+                <div class="field-value">
+                  <a href="mailto:${email}">${email}</a>
                 </div>
               </div>
               
-              <!-- Message Card -->
-              <div class="content-card" style="padding: 30px; border-radius: 12px; margin-bottom: 24px; border: 1px solid; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
-                <h2 class="section-title" style="margin: 0 0 20px 0; font-size: 20px; font-weight: 500; border-bottom: 2px solid; padding-bottom: 12px; display: flex; align-items: center;">
-                  💬 Message
-                </h2>
-                <div class="message-box" style="padding: 24px; border-radius: 8px; border-left: 4px solid; font-size: 16px; line-height: 1.7;">
-                  <p style="margin: 0; white-space: pre-wrap; font-weight: 300;">${message}</p>
-                </div>
+              <div class="message-field">
+                <div class="field-label">Message</div>
+                <div class="field-value">${message}</div>
               </div>
               
-              <!-- Action Box -->
-              <div class="info-box" style="padding: 24px; border-radius: 12px; border: 1px solid; text-align: center;">
-                <p style="margin: 0 0 12px 0; font-size: 16px; font-weight: 500;">
-                  ⚡ Quick Actions
-                </p>
-                <p style="margin: 0; font-size: 14px; font-weight: 300; line-height: 1.5;">
-                  Reply directly to this email or contact <strong>${name}</strong> at 
-                  <a href="mailto:${email}" style="color: #011936; text-decoration: none; font-weight: 500;">${email}</a>
-                </p>
+              <div class="timestamp">
+                Received: ${new Date().toLocaleString()}
               </div>
-              
             </div>
             
-            <!-- Footer -->
-            <div style="text-align: center; margin-top: 32px; padding: 0 30px;">
-              <p class="footer-text" style="margin: 0; font-size: 12px; font-weight: 300; opacity: 0.7;">
-                🔒 This message was securely sent from your portfolio contact form
-              </p>
-              <p class="footer-text" style="margin: 8px 0 0 0; font-size: 11px; font-weight: 300; opacity: 0.5;">
-                ${new Date().toLocaleDateString('en-US', { 
-                  weekday: 'long', 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </p>
+            <div class="footer">
+              This message was sent through your website's contact form.
             </div>
-            
           </div>
         </body>
         </html>
-      `,
+      `
     });
-
+    
     console.log('Email sent successfully:', emailData);
-
     return res.status(200).json({ 
       success: true, 
       message: 'Message sent successfully! I\'ll get back to you soon.',
       emailId: emailData.id
     });
-
   } catch (error) {
     console.error('Email sending error:', error);
-    
     // Handle specific Resend errors
     if (error.name === 'ResendError') {
       return res.status(400).json({ 
@@ -283,7 +259,6 @@ export default async function handler(req, res) {
         debug: process.env.NODE_ENV === 'development' ? error.message : undefined
       });
     }
-
     return res.status(500).json({ 
       success: false, 
       message: 'Internal server error. Please try again later.',
