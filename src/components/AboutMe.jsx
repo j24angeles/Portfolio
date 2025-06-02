@@ -196,7 +196,7 @@ building products that not only function beautifully but also make a real differ
           }`}
         >
           <h2 className="text-3xl sm:text-4xl lg:text-6xl font-bold mb-4 sm:mb-6" style={{ color: '#011936' }}>
-            About Me
+            Get to Know Me
           </h2>
           <div className="w-16 sm:w-24 h-1 mx-auto rounded-full" style={{ backgroundColor: '#011936' }}></div>
         </div>
