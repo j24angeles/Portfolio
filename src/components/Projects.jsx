@@ -265,8 +265,8 @@ const Projects = () => {
                 <div className="w-16 h-16 mx-auto rounded-full flex items-center justify-center" style={{ backgroundColor: '#8BADCE' }}>
                   <Star className="w-8 h-8 text-white" />
                 </div>
-                <h4 className="text-2xl font-bold" style={{ color: '#011936' }}>2</h4>
-                <p className="text-gray-600">Featured Projects</p>
+                <h4 className="text-2xl font-bold" style={{ color: '#011936' }}>2+</h4>
+                <p className="text-gray-600">Frameworks Known</p>
               </div>
             </div>
           </div>

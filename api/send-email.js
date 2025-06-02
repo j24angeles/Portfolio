@@ -41,6 +41,18 @@ export default async function handler(req, res) {
       });
     }
 
+    // Get current time in Philippine timezone (UTC+8, same as Kuala Lumpur)
+    const philippineTime = new Date().toLocaleDateString('en-US', { 
+      timeZone: 'Asia/Manila',
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true
+    });
+
     // Send email using Resend
     const emailData = await resend.emails.send({
       from: 'Portfolio Contact <onboarding@resend.dev>', // Replace with your verified domain
@@ -285,14 +297,7 @@ export default async function handler(req, res) {
                 🔒 This message was securely sent from your portfolio contact form
               </p>
               <p class="footer-text" style="margin: 8px 0 0 0; font-size: 11px; font-weight: 300; opacity: 0.5;">
-                ${new Date().toLocaleDateString('en-US', { 
-                  weekday: 'long', 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
+                ${philippineTime} (Philippine Time)
               </p>
             </div>
             
