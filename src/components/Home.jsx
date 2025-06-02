@@ -115,9 +115,9 @@ const Home = () => {
             {/* Bio */}
             <div className="space-y-4 sm:space-y-5">
               <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed text-center lg:text-left">
-                A passionate <span className="font-semibold" style={{ color: '#011936' }}>Full-Stack Developer</span> who 
-                turns coffee into code and ideas into digital experiences. I love crafting elegant solutions 
-                to complex problems and bringing creative visions to life.
+                A <span className="font-semibold" style={{ color: '#011936' }}>student developer</span> passionate about 
+turning coffee into code and ideas into digital experiences. I'm constantly learning to craft elegant solutions 
+to complex problems and excited to bring creative visions to life.
               </p>
               
               <p className="text-base sm:text-lg text-gray-600 leading-relaxed text-center lg:text-left">
