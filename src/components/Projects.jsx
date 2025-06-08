@@ -76,7 +76,7 @@ const Projects = () => {
       title: "Membership Management Simplified: Admin-Focused System for Mamba MNL",
       description: "Digital system for managing gym memberships, payments, and staff accounts.",
       image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      techStack: ['Angular', 'ASP.NET', 'C#', 'HeidiSQL', 'Chart.js', 'DaisyUI', 'Tailwind CSS', 'Node.js', 'Express.js'],
+      techStack: ['Angular', 'ASP.NET MVC', 'C#', 'HeidiSQL', 'Chart.js', 'DaisyUI', 'Tailwind CSS', 'Node.js', 'Express.js'],
       category: "Full Stack",
       featured: true,
       screenshots: [
@@ -120,7 +120,7 @@ const Projects = () => {
       title: "PeraMinder: Empowering Filipinos with Financial Clarity",
       description: "A financial tracking app to help students and young professionals manage finances and set goals.",
       image: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      techStack: ['Angular', 'ASP.NET', 'MaterializeCSS', 'Chart.js', 'HeidiSQL'],
+      techStack: ['Angular', 'ASP.NET MVC', 'MaterializeCSS', 'Chart.js', 'HeidiSQL'],
       category: "Full Stack",
       featured: false,
       screenshots: [
@@ -177,7 +177,7 @@ const Projects = () => {
       'MongoDB': '#6B8B6B',        // Darker pastel green
       'HeidiSQL': '#5A7099',       // Darker pastel blue
       'Firebase': '#CC8F66',       // Darker pastel orange
-      'ASP.NET': '#7B6B9D',        // Darker pastel purple
+      'ASP.NET MVC': '#7B6B9D',        // Darker pastel purple
       'Chart.js': '#B8728A',       // Darker pastel pink
       'Tailwind CSS': '#5B9B8F',   // Darker pastel teal
       'Axios': '#6B7FCC',          // Darker pastel purple
