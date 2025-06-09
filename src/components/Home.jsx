@@ -178,13 +178,13 @@ to complex problems and excited to bring creative visions to life.
             </div>
           </div>
 
-          {/* Desktop: Image Second */}
+          {/* Desktop: Image Second - UPDATED SIZES */}
           <div className="hidden lg:flex justify-center lg:justify-end order-1 lg:order-2">
             <div className="relative">
               <img 
                 src={icon}
                 alt="Joaquin" 
-                className="w-112 h-128 xl:w-120 xl:h-136 object-cover rounded-2xl hover:scale-105 transition-transform duration-300"
+                className="w-80 h-96 lg:w-96 lg:h-112 xl:w-112 xl:h-128 2xl:w-120 2xl:h-136 object-cover rounded-2xl hover:scale-105 transition-transform duration-300"
                 style={{ objectPosition: 'center top' }}
               />
             </div>
