@@ -12,7 +12,8 @@ import {
   Smartphone,
   X,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  ImageIcon
 } from 'lucide-react';
 
 const Projects = () => {
@@ -48,20 +49,33 @@ const Projects = () => {
     };
   }, [selectedProject]);
 
+  // Simple placeholder component
+  const PlaceholderImage = ({ className, alt, category }) => {
+    const getIcon = () => {
+      if (category?.includes('Mobile')) return <Smartphone className="w-12 h-12" />;
+      if (category?.includes('Frontend')) return <Monitor className="w-12 h-12" />;
+      if (category?.includes('Full Stack')) return <Code className="w-12 h-12" />;
+      return <ImageIcon className="w-12 h-12" />;
+    };
+
+    return (
+      <div className={`${className} bg-gradient-to-br from-gray-100 to-gray-200 flex flex-col items-center justify-center text-gray-400`}>
+        {getIcon()}
+        <span className="text-sm mt-2 font-medium text-center">{alt || 'Project Image'}</span>
+      </div>
+    );
+  };
+
   const projects = [
     {
       id: 1,
       title: "Ligaya: Lighting the Way for Child Advocacy",
       description: "A volunteer engagement platform built with UST Volunteers for UNICEF to support SDG 3 and 4.",
-      image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: null, // Will use placeholder
       techStack: ['React', 'Tailwind CSS', 'DaisyUI', 'Axios', 'Json Server'],
       category: "Frontend",
       featured: true,
-      screenshots: [
-        "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1559136555-9303baea8ebd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-      ],
+      screenshots: [null, null, null], // Will use placeholders
       features: [
         "Volunteer registration and profile management",
         "Event creation and participation tracking",
@@ -75,15 +89,11 @@ const Projects = () => {
       id: 2,
       title: "Membership Management Simplified: Admin-Focused System for Mamba MNL",
       description: "Digital system for managing gym memberships, payments, and staff accounts.",
-      image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: null, // Will use placeholder
       techStack: ['Angular', 'ASP.NET MVC', 'C#', 'HeidiSQL', 'Chart.js', 'DaisyUI', 'Tailwind CSS', 'Node.js', 'Express.js'],
       category: "Full Stack",
       featured: true,
-      screenshots: [
-        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-      ],
+      screenshots: [null, null, null], // Will use placeholders
       features: [
         "Member registration and profile management",
         "Payment tracking and billing system",
@@ -97,15 +107,11 @@ const Projects = () => {
       id: 3,
       title: "Forkfolio: Your Digital Recipe Organizer",
       description: "An Android app to organize and preserve Filipino and international recipes.",
-      image: "https://images.unsplash.com/photo-1577563908411-5077b6dc7624?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: null, // Will use placeholder
       techStack: ['Kotlin', 'Firebase'],
       category: "Full Stack Mobile Application",
       featured: true,
-      screenshots: [
-        "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-        "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
-      ],
+      screenshots: [null, null, null], // Will use placeholders
       features: [
         "Recipe creation with photo upload",
         "Category-based organization system",
@@ -119,14 +125,11 @@ const Projects = () => {
       id: 4,
       title: "PeraMinder: Empowering Filipinos with Financial Clarity",
       description: "A financial tracking app to help students and young professionals manage finances and set goals.",
-      image: "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: null, // Will use placeholder
       techStack: ['Angular', 'ASP.NET MVC', 'MaterializeCSS', 'Chart.js', 'HeidiSQL'],
       category: "Full Stack",
       featured: false,
-      screenshots: [
-        "https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-      ],
+      screenshots: [null, null], // Will use placeholders
       features: [
         "Expense tracking and categorization",
         "Budget planning and goal setting",
@@ -140,14 +143,11 @@ const Projects = () => {
       id: 5,
       title: "Sibol: A Product Showcase for Sibol Kakao, an Organic Fertilizer",
       description: "A simple mockup website to showcase the product and its benefits.",
-      image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+      image: null, // Will use placeholder
       techStack: ['HTML', 'CSS', 'Javascript'],
       category: "Frontend",
       featured: false,
-      screenshots: [
-        "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1574263867128-44f0b4cb0033?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-      ],
+      screenshots: [null, null], // Will use placeholders
       features: [
         "Product information and benefits",
         "Contact form for inquiries",
@@ -209,34 +209,34 @@ const Projects = () => {
     };
 
     return (
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-6 overflow-y-auto">
-        <div ref={modalRef} className="bg-white rounded-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div ref={modalRef} className="bg-white rounded-2xl max-w-6xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl">
           {/* Modal Header */}
-          <div className="sticky top-0 bg-white border-b border-gray-200 px-8 py-6 flex justify-between items-start rounded-t-2xl z-10">
+          <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-8 py-4 sm:py-6 flex justify-between items-start rounded-t-2xl z-10">
             <div className="space-y-2">
-              <h2 className="text-2xl font-bold" style={{ color: '#011936' }}>{project.title}</h2>
+              <h2 className="text-xl sm:text-2xl font-bold pr-4 sm:pr-8" style={{ color: '#011936' }}>{project.title}</h2>
               <div className="flex items-center space-x-3">
-                <span className="px-3 py-1 bg-gray-100 rounded-full text-sm font-medium" style={{ color: '#011936' }}>
+                <span className="px-3 py-1 bg-gray-100 rounded-full text-xs sm:text-sm font-medium" style={{ color: '#011936' }}>
                   {project.category}
                 </span>
                 {project.featured && (
                   <div className="flex items-center space-x-1 px-3 py-1 bg-yellow-100 rounded-full">
                     <Star className="w-3 h-3 text-yellow-600 fill-current" />
-                    <span className="text-yellow-600 text-sm font-medium">Featured</span>
+                    <span className="text-yellow-600 text-xs sm:text-sm font-medium">Featured</span>
                   </div>
                 )}
               </div>
             </div>
             <button 
               onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-xl transition-colors flex-shrink-0"
             >
               <X className="w-5 h-5" style={{ color: '#011936' }} />
             </button>
           </div>
 
           {/* Modal Content */}
-            <div className="px-14 py-8 space-y-8">
+            <div className="px-4 sm:px-8 lg:px-14 py-6 sm:py-8 space-y-6 sm:space-y-8">
             {/* Screenshot Gallery */}
             <div>
               <h3 className="text-lg font-semibold mb-4 flex items-center" style={{ color: '#011936' }}>
@@ -244,28 +244,36 @@ const Projects = () => {
                 Screenshots
               </h3>
               <div className="relative">
-                <img 
-                  src={project.screenshots[currentScreenshot]} 
-                  alt={`${project.title} screenshot ${currentScreenshot + 1}`}
-                  className="w-full h-80 object-cover rounded-xl shadow-md"
-                />
+                {project.screenshots[currentScreenshot] ? (
+                  <img 
+                    src={project.screenshots[currentScreenshot]} 
+                    alt={`${project.title} screenshot ${currentScreenshot + 1}`}
+                    className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover rounded-xl shadow-md"
+                  />
+                ) : (
+                  <PlaceholderImage 
+                    className="w-full h-48 sm:h-64 md:h-80 lg:h-96 rounded-xl shadow-md"
+                    alt={`${project.title} Screenshot ${currentScreenshot + 1}`}
+                    category={project.category}
+                  />
+                )}
                 
                 {/* Navigation Buttons */}
                 {project.screenshots.length > 1 && (
                   <>
                     <button
                       onClick={prevImage}
-                      className="absolute left-4 top-1/2 transform -translate-y-1/2 p-3 rounded-full shadow-lg text-white transition-all duration-200 hover:scale-105"
+                      className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 p-2 sm:p-3 rounded-full shadow-lg text-white transition-all duration-200 hover:scale-105"
                       style={{ backgroundColor: '#011936' }}
                     >
-                      <ChevronLeft className="w-4 h-4" />
+                      <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
                     </button>
                     <button
                       onClick={nextImage}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 p-3 rounded-full shadow-lg text-white transition-all duration-200 hover:scale-105"
+                      className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 p-2 sm:p-3 rounded-full shadow-lg text-white transition-all duration-200 hover:scale-105"
                       style={{ backgroundColor: '#011936' }}
                     >
-                      <ChevronRight className="w-4 h-4" />
+                      <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
                     </button>
                   </>
                 )}
@@ -292,7 +300,7 @@ const Projects = () => {
 
                 {/* Image Counter */}
                 {project.screenshots.length > 1 && (
-                  <div className="absolute top-4 right-4 px-3 py-1 rounded-lg text-sm font-medium text-white" style={{ backgroundColor: 'rgba(1, 25, 54, 0.8)' }}>
+                  <div className="absolute top-2 sm:top-4 right-2 sm:right-4 px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm font-medium text-white" style={{ backgroundColor: 'rgba(1, 25, 54, 0.8)' }}>
                     {currentScreenshot + 1} / {project.screenshots.length}
                   </div>
                 )}
@@ -300,16 +308,16 @@ const Projects = () => {
             </div>
 
             {/* Project Details Grid */}
-            <div className="grid lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
               {/* Left Column */}
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold mb-3" style={{ color: '#011936' }}>Description</h3>
-                  <p className="text-gray-600 leading-relaxed">{project.description}</p>
+                  <h3 className="text-base sm:text-lg font-semibold mb-3" style={{ color: '#011936' }}>Description</h3>
+                  <p className="text-gray-600 leading-relaxed text-sm sm:text-base">{project.description}</p>
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold mb-4" style={{ color: '#011936' }}>Key Features</h3>
+                  <h3 className="text-base sm:text-lg font-semibold mb-4" style={{ color: '#011936' }}>Key Features</h3>
                   <ul className="space-y-2">
                     {project.features.map((feature, index) => (
                       <li key={index} className="flex items-start">
@@ -325,9 +333,9 @@ const Projects = () => {
               </div>
 
               {/* Right Column */}
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold mb-4 flex items-center" style={{ color: '#011936' }}>
+                  <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center" style={{ color: '#011936' }}>
                     <Layers className="w-4 h-4 mr-2" />
                     Technologies
                   </h3>
@@ -345,14 +353,14 @@ const Projects = () => {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold mb-3" style={{ color: '#011936' }}>Challenges</h3>
+                  <h3 className="text-base sm:text-lg font-semibold mb-3" style={{ color: '#011936' }}>Challenges</h3>
                   <p className="text-gray-600 leading-relaxed text-sm">{project.challenges}</p>
                 </div>
 
                 <div className="pt-4">
                   <button 
                     onClick={() => handleProjectGitHub(project.github)}
-                    className="w-full flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:opacity-90 shadow-sm text-white"
+                    className="w-full flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:opacity-90 shadow-sm text-white text-sm sm:text-base"
                     style={{ backgroundColor: '#011936' }}
                   >
                     <Github className="w-4 h-4" />
@@ -382,9 +390,9 @@ const Projects = () => {
             isVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
           }`}
         >
-          <div className="flex items-center justify-center mb-8">
-            <Code className="w-12 h-12 mr-4" style={{ color: '#011936' }} />
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold" style={{ color: '#011936' }}>
+          <div className="flex flex-col sm:flex-row items-center justify-center mb-8 space-y-4 sm:space-y-0 sm:space-x-4">
+            <Code className="w-12 h-12" style={{ color: '#011936' }} />
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-center" style={{ color: '#011936' }}>
               Featured Projects
             </h2>
           </div>
@@ -417,11 +425,19 @@ const Projects = () => {
                   
                   {/* Project Image */}
                   <div className="relative overflow-hidden group">
-                    <img 
-                      src={project.image} 
-                      alt={project.title}
-                      className="w-full h-64 object-cover transition-all duration-300"
-                    />
+                    {project.image ? (
+                      <img 
+                        src={project.image} 
+                        alt={project.title}
+                        className="w-full h-64 object-cover transition-all duration-300"
+                      />
+                    ) : (
+                      <PlaceholderImage 
+                        className="w-full h-64 transition-all duration-300"
+                        alt={project.title}
+                        category={project.category}
+                      />
+                    )}
                     
                     {/* Image Overlay */}
                     <div className={`absolute inset-0 transition-opacity duration-300 ${
@@ -473,27 +489,27 @@ const Projects = () => {
 
                     {/* Tech Stack Preview */}
                     <div className="mb-6">
-  <div className="flex items-center gap-2 mb-3">
-    <Layers className="w-5 h-5 text-gray-600" />
-    <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Tech Stack</h3>
-  </div>
-  <div className="flex flex-wrap gap-2">
-    {project.techStack.slice(0, 3).map((tech, techIndex) => (
-      <span
-        key={techIndex}
-        className="px-3 py-1 text-xs font-medium text-white rounded-full transition-all duration-300 hover:scale-105"
-        style={{ backgroundColor: getTechStackColor(tech) }}
-      >
-        {tech}
-      </span>
-    ))}
-    {project.techStack.length > 3 && (
-      <span className="px-3 py-1 text-xs font-medium text-gray-600 bg-gray-200 rounded-full">
-        +{project.techStack.length - 3}
-      </span>
-    )}
-  </div>
-</div>
+                      <div className="flex items-center gap-2 mb-3">
+                        <Layers className="w-5 h-5 text-gray-600" />
+                        <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">Tech Stack</h3>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {project.techStack.slice(0, 3).map((tech, techIndex) => (
+                          <span
+                            key={techIndex}
+                            className="px-3 py-1 text-xs font-medium text-white rounded-full transition-all duration-300 hover:scale-105"
+                            style={{ backgroundColor: getTechStackColor(tech) }}
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                        {project.techStack.length > 3 && (
+                          <span className="px-3 py-1 text-xs font-medium text-gray-600 bg-gray-200 rounded-full">
+                            +{project.techStack.length - 3}
+                          </span>
+                        )}
+                      </div>
+                    </div>
                     {/* Action Buttons */}
                     <div className="flex items-center space-x-3 mt-auto">
                       <button 
