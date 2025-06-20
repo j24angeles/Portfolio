@@ -57,7 +57,7 @@ const Skills = () => {
         { name: 'Node.js', icon: Terminal, level: 'Intermediate', description: 'JavaScript server runtime' },
         { name: 'Express.js', icon: Zap, level: 'Beginner', description: 'Fast web framework' },
         { name: 'JSON Server', icon: Database, level: 'Advanced', description: 'REST API prototyping' },
-        { name: 'PHP', icon: Zap, level: 'Intermediate', description: 'Server-side scripting and web backend' },
+        { name: 'PHP', icon: Globe, level: 'Intermediate', description: 'Server-side scripting and web backend' },
         { name: 'Java', icon: BookOpen, level: 'Advanced', description: 'Object-oriented programming and backend development' },
       ]
     },
@@ -186,7 +186,7 @@ const Skills = () => {
                 return (
                   <div
                     key={index}
-                    className={`bg-white rounded-xl p-5 shadow-md border-2 border-gray-100 cursor-pointer transition-all duration-300 transform hover:-translate-y-2 hover:shadow-lg ${
+                    className={`bg-white rounded-xl p-5 shadow-md border-2 border-gray-100 cursor-pointer transition-all duration-300 transform hover:-translate-y-2 hover:shadow-lg flex flex-col justify-between ${
                       isHovered ? 'scale-105' : 'scale-100'
                     } ${activeCategory === 'soft' ? 'min-h-[160px]' : 'min-h-[140px]'}`}
                     style={isHovered ? { 
@@ -195,64 +195,66 @@ const Skills = () => {
                     onMouseEnter={() => setHoveredSkill(`${activeCategory}-${index}`)}
                     onMouseLeave={() => setHoveredSkill(null)}
                   >
-                    <div className="flex flex-col space-y-3 mb-4">
-                      <div className="flex items-center justify-between">
-                        <div 
-                          className="p-2 rounded-lg flex-shrink-0"
-                          style={{ backgroundColor: `${skillCategories[activeCategory].color}20` }}
-                        >
-                          <SkillIcon 
-                            className="w-5 h-5" 
-                            style={{ color: skillCategories[activeCategory].color }}
-                          />
+                    <div>
+                      <div className="flex flex-col space-y-3 mb-4">
+                        <div className="flex items-center justify-between">
+                          <div 
+                            className="p-2 rounded-lg flex-shrink-0"
+                            style={{ backgroundColor: `${skillCategories[activeCategory].color}20` }}
+                          >
+                            <SkillIcon 
+                              className="w-5 h-5" 
+                              style={{ color: skillCategories[activeCategory].color }}
+                            />
+                          </div>
+                          <div 
+                            className="px-3 py-1 rounded-full text-xs font-medium text-white"
+                            style={{ backgroundColor: getLevelColor(skill.level) }}
+                          >
+                            {skill.level}
+                          </div>
                         </div>
-                        <div 
-                          className="px-3 py-1 rounded-full text-xs font-medium text-white"
-                          style={{ backgroundColor: getLevelColor(skill.level) }}
-                        >
-                          {skill.level}
+                        <div>
+                          <h4 className="text-lg font-bold mb-1" style={{ color: '#011936' }}>
+                            {skill.name}
+                          </h4>
+                          <p className="text-gray-600 text-sm leading-relaxed">{skill.description}</p>
                         </div>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-bold mb-1" style={{ color: '#011936' }}>
-                          {skill.name}
-                        </h4>
-                        <p className="text-gray-600 text-sm leading-relaxed">{skill.description}</p>
                       </div>
                     </div>
-
-                    {/* Skill Level Indicator */}
-                    <div className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-500">Proficiency Level</span>
-                        <span className="font-medium" style={{ color: getLevelColor(skill.level) }}>
-                          {skill.level}
-                        </span>
+                    <div className="mt-auto">
+                      {/* Skill Level Indicator */}
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-500">Proficiency Level</span>
+                          <span className="font-medium" style={{ color: getLevelColor(skill.level) }}>
+                            {skill.level}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                          <div 
+                            className="h-2 rounded-full transition-all duration-1000 ease-out"
+                            style={{ 
+                              backgroundColor: getLevelColor(skill.level),
+                              width: isVisible ? (
+                                skill.level === 'Expert' ? '100%' :
+                                skill.level === 'Advanced' ? '80%' :
+                                skill.level === 'Intermediate' ? '60%' : '40%'
+                              ) : '0%',
+                              transitionDelay: `${index * 150}ms`
+                            }}
+                          ></div>
+                        </div>
                       </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                        <div 
-                          className="h-2 rounded-full transition-all duration-1000 ease-out"
-                          style={{ 
-                            backgroundColor: getLevelColor(skill.level),
-                            width: isVisible ? (
-                              skill.level === 'Expert' ? '100%' :
-                              skill.level === 'Advanced' ? '80%' :
-                              skill.level === 'Intermediate' ? '60%' : '40%'
-                            ) : '0%',
-                            transitionDelay: `${index * 150}ms`
-                          }}
-                        ></div>
-                      </div>
+                      {/* Hover Effect */}
+                      {isHovered && (
+                        <div className="mt-4 flex items-center text-xs font-medium animate-fadeIn" 
+                             style={{ color: skillCategories[activeCategory].color }}>
+                          <Zap className="w-3 h-3 mr-1" />
+                          <span>Actively using in projects</span>
+                        </div>
+                      )}
                     </div>
-
-                    {/* Hover Effect */}
-                    {isHovered && (
-                      <div className="mt-4 flex items-center text-xs font-medium animate-fadeIn" 
-                           style={{ color: skillCategories[activeCategory].color }}>
-                        <Zap className="w-3 h-3 mr-1" />
-                        <span>Actively using in projects</span>
-                      </div>
-                    )}
                   </div>
                 );
               })}
