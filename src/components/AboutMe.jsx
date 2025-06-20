@@ -21,16 +21,6 @@ const AboutMe = () => {
 
   const educationCards = [
     {
-      year: "2020-2022",
-      title: "Our Lady of Peace School",
-      subtitle: "Senior High School - STEM Strand",
-      achievement: "Graduated With Honors",
-      icon: Award,
-      color: "#011936",
-      description: "Focused on Science, Technology, Engineering, and Mathematics. Built a strong foundation in analytical thinking and problem-solving.",
-      location: "Antipolo City, Rizal, Philippines"
-    },
-    {
       year: "2022-Present",
       title: "University of Santo Tomas",
       subtitle: "BS Information Technology",
@@ -39,6 +29,16 @@ const AboutMe = () => {
       color: "#465775",
       description: "Specializing in Web and Mobile App Development. Currently maintaining excellent academic standing while building real-world projects.",
       location: "Manila, Philippines"
+    },
+    {
+      year: "2020-2022",
+      title: "Our Lady of Peace School",
+      subtitle: "Senior High School - STEM Strand",
+      achievement: "Graduated With Honors",
+      icon: Award,
+      color: "#011936",
+      description: "Focused on Science, Technology, Engineering, and Mathematics. Built a strong foundation in analytical thinking and problem-solving.",
+      location: "Antipolo City, Rizal, Philippines"
     }
   ];
 

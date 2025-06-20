@@ -194,6 +194,7 @@ const Projects = () => {
 
  const ProjectModal = ({ project, onClose }) => {
     const [currentScreenshot, setCurrentScreenshot] = useState(0);
+    const [zoomed, setZoomed] = useState(false);
 
     const nextImage = () => {
       setCurrentScreenshot((prev) => 
@@ -207,13 +208,42 @@ const Projects = () => {
       );
     };
 
+    // Responsive: Use bottom sheet on mobile
+    // Use window.innerWidth to determine if mobile
+    const [isMobile, setIsMobile] = useState(false);
+    useEffect(() => {
+      const checkMobile = () => setIsMobile(window.innerWidth < 640);
+      checkMobile();
+      window.addEventListener('resize', checkMobile);
+      return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
+    // Helper to check if current screenshot is a real image
+    const isCurrentScreenshotImage = Boolean(project.screenshots[currentScreenshot]);
+
     return (
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
-        <div ref={modalRef} className="bg-white rounded-2xl max-w-6xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div className={`fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/70 backdrop-blur-sm transition-all duration-300`}>
+        {/* Modal Container */}
+        <div
+          ref={modalRef}
+          className={`bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl w-full sm:max-w-3xl md:max-w-4xl lg:max-w-6xl max-h-[95vh] overflow-y-auto flex flex-col relative transition-all duration-300
+            ${isMobile ? 'h-[90vh] animate-slideUp' : 'h-auto animate-fadeInModal'}`}
+          style={{ fontFamily: 'Poppins, sans-serif' }}
+        >
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 p-1.5 rounded-full bg-white/80 shadow-lg hover:bg-gray-100 transition-all duration-200 focus:outline-none z-20"
+            aria-label="Close modal"
+            style={{ color: '#011936', fontSize: 20 }}
+          >
+            <X className="w-5 h-5 sm:w-6 sm:h-6" />
+          </button>
+
           {/* Modal Header */}
-          <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-8 py-4 sm:py-6 flex justify-between items-start rounded-t-2xl z-10">
+          <div className="sticky top-0 bg-white/95 border-b border-gray-200 px-6 sm:px-8 py-5 sm:py-6 flex flex-col sm:flex-row sm:justify-between sm:items-start rounded-t-3xl sm:rounded-t-2xl z-10">
             <div className="space-y-2">
-              <h2 className="text-xl sm:text-2xl font-bold pr-4 sm:pr-8" style={{ color: '#011936' }}>{project.title}</h2>
+              <h2 className="text-lg sm:text-2xl font-bold pr-4 sm:pr-8" style={{ color: '#011936' }}>{project.title}</h2>
               <div className="flex items-center space-x-3">
                 <span className="px-3 py-1 bg-gray-100 rounded-full text-xs sm:text-sm font-medium" style={{ color: '#011936' }}>
                   {project.category}
@@ -226,65 +256,60 @@ const Projects = () => {
                 )}
               </div>
             </div>
-            <button 
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-xl transition-colors flex-shrink-0"
-            >
-              <X className="w-5 h-5" style={{ color: '#011936' }} />
-            </button>
           </div>
 
           {/* Modal Content */}
-            <div className="px-4 sm:px-8 lg:px-14 py-6 sm:py-8 space-y-6 sm:space-y-8">
+          <div className="px-4 sm:px-8 lg:px-14 py-5 sm:py-8 space-y-6 sm:space-y-8 flex-1 overflow-y-auto">
             {/* Screenshot Gallery */}
             <div>
-              <h3 className="text-lg font-semibold mb-4 flex items-center" style={{ color: '#011936' }}>
+              <h3 className="text-base sm:text-lg font-semibold mb-3 flex items-center" style={{ color: '#011936' }}>
                 <Camera className="w-5 h-5 mr-2" />
                 Screenshots
               </h3>
               <div className="relative">
-                {project.screenshots[currentScreenshot] ? (
+                {isCurrentScreenshotImage ? (
                   <img 
                     src={project.screenshots[currentScreenshot]} 
                     alt={`${project.title} screenshot ${currentScreenshot + 1}`}
-                    className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover rounded-xl shadow-md"
+                    className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover rounded-xl shadow-md cursor-zoom-in"
+                    onClick={() => setZoomed(true)}
                   />
                 ) : (
-                  <PlaceholderImage 
-                    className="w-full h-48 sm:h-64 md:h-80 lg:h-96 rounded-xl shadow-md"
-                    alt={`${project.title} Screenshot ${currentScreenshot + 1}`}
-                    category={project.category}
-                  />
+                  <div className="cursor-not-allowed">
+                    <PlaceholderImage 
+                      className="w-full h-48 sm:h-64 md:h-80 lg:h-96 rounded-xl shadow-md"
+                      alt={`${project.title} Screenshot ${currentScreenshot + 1}`}
+                      category={project.category}
+                    />
+                  </div>
                 )}
-                
-                {/* Navigation Buttons */}
+                {/* Navigation Buttons (larger on mobile) */}
                 {project.screenshots.length > 1 && (
                   <>
                     <button
                       onClick={prevImage}
-                      className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 p-2 sm:p-3 rounded-full shadow-lg text-white transition-all duration-200 hover:scale-105"
-                      style={{ backgroundColor: '#011936' }}
+                      className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 p-2 sm:p-2.5 rounded-full shadow-lg text-neutral-700/60 hover:text-black/80 bg-white/60 hover:bg-white/80 transition-all duration-200 hover:scale-110 border border-gray-200"
+                      style={{ fontSize: isMobile ? 22 : 16, backdropFilter: 'blur(2px)' }}
                     >
-                      <ChevronLeft className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                     <button
                       onClick={nextImage}
-                      className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 p-2 sm:p-3 rounded-full shadow-lg text-white transition-all duration-200 hover:scale-105"
-                      style={{ backgroundColor: '#011936' }}
+                      className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 p-2 sm:p-2.5 rounded-full shadow-lg text-neutral-700/60 hover:text-black/80 bg-white/60 hover:bg-white/80 transition-all duration-200 hover:scale-110 border border-gray-200"
+                      style={{ fontSize: isMobile ? 22 : 16, backdropFilter: 'blur(2px)' }}
                     >
-                      <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4" />
+                      <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
                   </>
                 )}
-
                 {/* Image Indicators */}
                 {project.screenshots.length > 1 && (
-                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                  <div className="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-2">
                     {project.screenshots.map((_, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentScreenshot(index)}
-                        className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                        className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
                           currentScreenshot === index 
                             ? 'scale-125' 
                             : 'scale-100 hover:scale-110'
@@ -296,27 +321,44 @@ const Projects = () => {
                     ))}
                   </div>
                 )}
-
                 {/* Image Counter */}
                 {project.screenshots.length > 1 && (
-                  <div className="absolute top-2 sm:top-4 right-2 sm:right-4 px-2 sm:px-3 py-1 rounded-lg text-xs sm:text-sm font-medium text-white" style={{ backgroundColor: 'rgba(1, 25, 54, 0.8)' }}>
+                  <div className="absolute top-2 right-2 px-2 py-1 rounded-lg text-xs font-medium text-neutral-700/60 bg-white/60 border border-gray-200" style={{backdropFilter: 'blur(2px)'}}>
                     {currentScreenshot + 1} / {project.screenshots.length}
+                  </div>
+                )}
+                {/* Zoomed Image Modal */}
+                {zoomed && isCurrentScreenshotImage && (
+                  <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fadeInModal" onClick={() => setZoomed(false)}>
+                    <img 
+                      src={project.screenshots[currentScreenshot]}
+                      alt="Zoomed screenshot"
+                      className="max-w-full max-h-[90vh] rounded-2xl shadow-2xl border-4 border-white"
+                      onClick={e => e.stopPropagation()}
+                    />
+                    <button
+                      onClick={() => setZoomed(false)}
+                      className="absolute top-6 right-6 p-3 rounded-full bg-white/80 shadow-lg hover:bg-gray-100 transition-all duration-200 focus:outline-none"
+                      aria-label="Close zoomed image"
+                      style={{ color: '#011936', fontSize: 28 }}
+                    >
+                      <X className="w-7 h-7" />
+                    </button>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Project Details Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+            {/* Project Details Grid (stacked on mobile) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
               {/* Left Column */}
               <div className="space-y-4 sm:space-y-6">
                 <div>
-                  <h3 className="text-base sm:text-lg font-semibold mb-3" style={{ color: '#011936' }}>Description</h3>
+                  <h3 className="text-base sm:text-lg font-semibold mb-2" style={{ color: '#011936' }}>Description</h3>
                   <p className="text-gray-600 leading-relaxed text-sm sm:text-base">{project.description}</p>
                 </div>
-
                 <div>
-                  <h3 className="text-base sm:text-lg font-semibold mb-4" style={{ color: '#011936' }}>Key Features</h3>
+                  <h3 className="text-base sm:text-lg font-semibold mb-3" style={{ color: '#011936' }}>Key Features</h3>
                   <ul className="space-y-2">
                     {project.features.map((feature, index) => (
                       <li key={index} className="flex items-start">
@@ -330,11 +372,10 @@ const Projects = () => {
                   </ul>
                 </div>
               </div>
-
               {/* Right Column */}
               <div className="space-y-4 sm:space-y-6">
                 <div>
-                  <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center" style={{ color: '#011936' }}>
+                  <h3 className="text-base sm:text-lg font-semibold mb-3 flex items-center" style={{ color: '#011936' }}>
                     <Layers className="w-4 h-4 mr-2" />
                     Technologies
                   </h3>
@@ -350,17 +391,15 @@ const Projects = () => {
                     ))}
                   </div>
                 </div>
-
                 <div>
-                  <h3 className="text-base sm:text-lg font-semibold mb-3" style={{ color: '#011936' }}>Challenges</h3>
+                  <h3 className="text-base sm:text-lg font-semibold mb-2" style={{ color: '#011936' }}>Challenges</h3>
                   <p className="text-gray-600 leading-relaxed text-sm">{project.challenges}</p>
                 </div>
-
-                <div className="pt-4">
+                <div className="pt-2">
                   <button 
                     onClick={() => handleProjectGitHub(project.github)}
-                    className="w-full flex items-center justify-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 hover:opacity-90 shadow-sm text-white text-sm sm:text-base"
-                    style={{ backgroundColor: '#011936' }}
+                    className="w-full flex items-center justify-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 hover:opacity-90 shadow-md text-white text-sm sm:text-base bg-[#011936]"
+                    style={{ fontFamily: 'Poppins, sans-serif' }}
                   >
                     <Github className="w-4 h-4" />
                     <span>View Source Code</span>
@@ -370,6 +409,23 @@ const Projects = () => {
               </div>
             </div>
           </div>
+          {/* Animations for modal */}
+          <style>{`
+            .animate-slideUp {
+              animation: slideUpModal 0.35s cubic-bezier(0.4,0,0.2,1);
+            }
+            @keyframes slideUpModal {
+              from { transform: translateY(100%); opacity: 0; }
+              to { transform: translateY(0); opacity: 1; }
+            }
+            .animate-fadeInModal {
+              animation: fadeInModal 0.3s cubic-bezier(0.4,0,0.2,1);
+            }
+            @keyframes fadeInModal {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+          `}</style>
         </div>
       </div>
     );
