@@ -20,7 +20,6 @@ const Projects = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [hoveredProject, setHoveredProject] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
-  const [activeDemo, setActiveDemo] = useState(null);
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -589,13 +588,13 @@ const Projects = () => {
           }`}
         >
           <button 
-            className="inline-flex items-center space-x-4 px-8 py-4 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 shadow-lg text-white"
-            style={{ backgroundColor: '#011936' }}
+            className="inline-flex items-center space-x-4 px-6 py-3 rounded-lg font-medium transition-all duration-300 transform bg-[#011936] text-white border-2 border-[#011936] hover:bg-[#011936]/90 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#011936]/40 relative overflow-hidden group"
             onClick={handleGitHubClick}
           >
-            <Github className="w-5 h-5" />
-            <span>View All Projects on GitHub</span>
-            <ArrowRight className="w-4 h-4" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+            <Github className="w-5 h-5 relative z-10" />
+            <span className="relative z-10">View All Projects on GitHub</span>
+            <ArrowRight className="w-4 h-4 relative z-10" />
           </button>
         </div>
 

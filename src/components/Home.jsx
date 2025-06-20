@@ -136,19 +136,7 @@ to complex problems and excited to bring creative visions to life.
                 View My Work
               </button>
               <button 
-                className="px-6 py-3 sm:px-8 sm:py-4 border-2 font-semibold rounded-xl transition-all duration-300 hover:text-white"
-                style={{ 
-                  borderColor: '#011936', 
-                  color: '#011936'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.backgroundColor = '#011936';
-                  e.target.style.color = 'white';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.backgroundColor = 'transparent';
-                  e.target.style.color = '#011936';
-                }}
+                className="px-6 py-3 sm:px-8 sm:py-4 border-2 font-semibold rounded-xl transition-all duration-300 hover:text-white hover:bg-[#011936] hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#011936]/40 text-[#011936] border-[#011936] bg-transparent"
                 onClick={handleDownloadResume}
               >
                 Download my CV

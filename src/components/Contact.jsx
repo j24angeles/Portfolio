@@ -390,13 +390,14 @@ const Contact = () => {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`w-full py-3 px-6 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 text-white shadow-lg ${
+                  className={`w-full py-3 px-6 rounded-lg font-medium transition-all duration-300 transform flex items-center justify-center space-x-2 text-white border-2 border-[#011936] bg-[#011936] hover:bg-[#011936]/90 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#011936]/40 relative overflow-hidden group ${
                     isSubmitting 
-                      ? 'bg-gray-400 cursor-not-allowed transform-none' 
-                      : 'hover:opacity-90'
+                      ? 'bg-gray-400 cursor-not-allowed transform-none border-gray-400' 
+                      : ''
                   }`}
-                  style={{ backgroundColor: isSubmitting ? undefined : '#011936' }}
+                  style={isSubmitting ? {} : undefined}
                 >
+                  {!isSubmitting && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>}
                   {isSubmitting ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
@@ -404,8 +405,8 @@ const Contact = () => {
                     </>
                   ) : (
                     <>
-                      <Send className="w-4 h-4" />
-                      <span>Send Message</span>
+                      <Send className="w-4 h-4 relative z-10" />
+                      <span className="relative z-10">Send Message</span>
                     </>
                   )}
                 </button>
@@ -518,33 +519,21 @@ const Contact = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="mailto:joaquinmiguel.ja@gmail.com"
-                className="inline-flex items-center space-x-2 px-6 py-3 text-white rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:opacity-90"
-                style={{ backgroundColor: '#011936' }}
+                className="inline-flex items-center space-x-2 px-6 py-3 text-white rounded-lg font-medium transition-all duration-300 transform bg-[#011936] border-2 border-[#011936] hover:bg-[#011936]/90 hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#011936]/40 relative overflow-hidden group"
               >
-                <Mail className="w-4 h-4" />
-                <span>Email Me</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                <Mail className="w-4 h-4 relative z-10" />
+                <span className="relative z-10">Email Me</span>
               </a>
-            <a 
-  href="https://m.me/j24angeles"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="inline-flex items-center space-x-2 px-6 py-3 border-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 hover:text-white"
-  style={{ 
-    borderColor: '#011936', 
-    color: '#011936'
-  }}
-  onMouseEnter={(e) => {
-    e.target.style.backgroundColor = '#011936';
-    e.target.style.color = 'white';
-  }}
-  onMouseLeave={(e) => {
-    e.target.style.backgroundColor = 'transparent';
-    e.target.style.color = '#011936';
-  }}
->
-  <MessageCircle className="w-4 h-4" />
-  <span>Let's Chat</span>
-</a>
+              <a 
+                href="https://m.me/j24angeles"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center space-x-2 px-6 py-3 border-2 border-[#011936] text-[#011936] bg-transparent rounded-lg font-medium transition-all duration-300 transform hover:bg-[#011936] hover:text-white hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#011936]/40"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span>Let's Chat</span>
+              </a>
             </div>
           </div>
         </div>
