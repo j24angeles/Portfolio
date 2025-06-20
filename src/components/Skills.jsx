@@ -56,7 +56,9 @@ const Skills = () => {
         { name: 'ASP.NET', icon: Server, level: 'Advanced', description: 'Microsoft web framework' },
         { name: 'Node.js', icon: Terminal, level: 'Intermediate', description: 'JavaScript server runtime' },
         { name: 'Express.js', icon: Zap, level: 'Beginner', description: 'Fast web framework' },
-        { name: 'JSON Server', icon: Database, level: 'Advanced', description: 'REST API prototyping' }
+        { name: 'JSON Server', icon: Database, level: 'Advanced', description: 'REST API prototyping' },
+        { name: 'PHP', icon: Zap, level: 'Intermediate', description: 'Server-side scripting and web backend' },
+        { name: 'Java', icon: BookOpen, level: 'Advanced', description: 'Object-oriented programming and backend development' },
       ]
     },
     database: {
