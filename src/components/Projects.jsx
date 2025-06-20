@@ -15,6 +15,8 @@ import {
   ChevronRight,
   ImageIcon
 } from 'lucide-react';
+import ligayaImg from '../assets/Ligaya - Home.png';
+import sibolImg from '../assets/Sibol - Home.png';
 
 const Projects = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -70,7 +72,7 @@ const Projects = () => {
       id: 1,
       title: "Ligaya: Lighting the Way for Child Advocacy",
       description: "A volunteer engagement platform built with UST Volunteers for UNICEF to support SDG 3 and 4.",
-      image: null, // Will use placeholder
+      image: ligayaImg,
       techStack: ['React', 'Tailwind CSS', 'DaisyUI', 'Axios', 'Json Server'],
       category: "Frontend",
       featured: true,
@@ -124,7 +126,7 @@ const Projects = () => {
       id: 4,
       title: "PeraMinder: Empowering Filipinos with Financial Clarity",
       description: "A financial tracking app to help students and young professionals manage finances and set goals.",
-      image: null, // Will use placeholder
+      image: null,
       techStack: ['Angular', 'ASP.NET MVC', 'MaterializeCSS', 'Chart.js', 'HeidiSQL'],
       category: "Full Stack",
       featured: false,
@@ -142,7 +144,7 @@ const Projects = () => {
       id: 5,
       title: "Sibol: A Product Showcase for Sibol Kakao, an Organic Fertilizer",
       description: "A simple mockup website to showcase the product and its benefits.",
-      image: null, // Will use placeholder
+      image: sibolImg,
       techStack: ['HTML', 'CSS', 'Javascript'],
       category: "Frontend",
       featured: false,
@@ -484,11 +486,12 @@ const Projects = () => {
                       <img 
                         src={project.image} 
                         alt={project.title}
-                        className="w-full h-64 object-cover transition-all duration-300"
+                        className={`w-full h-80 transition-all duration-300 ${project.title.includes('PeraMinder') ? 'object-contain scale-90' : 'object-cover'}`}
+                        style={project.title.includes('PeraMinder') ? { transform: 'scale(0.9)', objectFit: 'contain' } : {}}
                       />
                     ) : (
                       <PlaceholderImage 
-                        className="w-full h-64 transition-all duration-300"
+                        className="w-full h-80 transition-all duration-300"
                         alt={project.title}
                         category={project.category}
                       />
