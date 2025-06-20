@@ -82,9 +82,7 @@ const AboutMe = () => {
         return (
           <div className="space-y-4 sm:space-y-6">
             <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
-              I am a motivated <span className="font-semibold" style={{ color: '#011936' }}>emerging Full-Stack Developer</span> who 
-is excited about creating digital experiences that truly connect with people. I'm inspired by the potential of 
-building products that not only function beautifully but also make a real difference in users' lives.
+              I am a motivated <span className="font-semibold" style={{ color: '#011936' }}>aspiring IT professional</span> who is passionate about technology in all its forms—whether that's web development, cloud computing, AI/ML, or any area where I can make an impact. I'm inspired by the potential of building solutions that not only function beautifully but also make a real difference in people's lives.
             </p>
             <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
               My fascination with technology stems from its incredible pace of evolution. Every day brings new 
@@ -185,7 +183,7 @@ building products that not only function beautifully but also make a real differ
     <section 
       id="about" 
       className="min-h-screen bg-gray-50 py-12 sm:py-16 lg:py-20"
-      style={{ fontFamily: 'Roboto, sans-serif' }}
+      style={{ fontFamily: 'Poppins, sans-serif' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
         

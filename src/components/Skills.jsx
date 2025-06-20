@@ -104,7 +104,7 @@ const Skills = () => {
     <section 
       id="skills" 
       className="min-h-screen bg-white py-16 lg:py-20"
-      style={{ fontFamily: 'Roboto, sans-serif' }}
+      style={{ fontFamily: 'Poppins, sans-serif' }}
     >
       <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
         

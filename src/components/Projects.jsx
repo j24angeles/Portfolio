@@ -380,7 +380,7 @@ const Projects = () => {
     <section 
       id="projects" 
       className="min-h-screen bg-gray-50 py-20 lg:py-24"
-      style={{ fontFamily: 'Roboto, sans-serif' }}
+      style={{ fontFamily: 'Poppins, sans-serif' }}
     >
       <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
         

@@ -227,8 +227,8 @@ const Contact = () => {
   return (
     <section 
       id="contact" 
-      className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-16 lg:py-20"
-      style={{ fontFamily: 'Roboto, sans-serif' }}
+      className="min-h-screen bg-white py-20 lg:py-24"
+      style={{ fontFamily: 'Poppins, sans-serif' }}
     >
       <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
         

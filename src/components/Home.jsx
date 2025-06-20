@@ -80,11 +80,11 @@ const Home = () => {
   return (
     <section 
       id="home" 
-      className="min-h-screen bg-white flex items-center justify-center py-12 sm:py-16 lg:py-8"
-      style={{ fontFamily: 'Roboto, sans-serif' }}
+      className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-slate-100 flex items-center justify-center py-8 sm:py-10 lg:py-4"
+      style={{ fontFamily: 'Poppins, sans-serif' }}
     >
       <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-center w-full">
           
           {/* Mobile: Image First */}
           <div className="flex justify-center lg:hidden order-1">
@@ -99,14 +99,14 @@ const Home = () => {
           </div>
 
           {/* Content */}
-          <div className="space-y-6 sm:space-y-8 lg:space-y-6 lg:pr-2 order-2 lg:order-1 px-2 sm:px-4 lg:px-0">
+          <div className="space-y-5 sm:space-y-7 lg:space-y-5 lg:pr-2 order-2 lg:order-1 px-2 sm:px-4 lg:px-0">
             
             {/* Greeting */}
-            <div className="space-y-4 sm:space-y-5">
-              <h1 className="text-3xl sm:text-4xl lg:text-6xl xl:text-7xl font-bold leading-tight text-center lg:text-left" style={{ color: '#011936' }}>
+            <div className="space-y-3 sm:space-y-4">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl 2xl:text-6xl font-bold leading-tight text-center lg:text-left" style={{ color: '#011936' }}>
                 Hello there!
               </h1>
-              <div className="text-lg sm:text-xl lg:text-3xl xl:text-4xl font-light text-gray-700 text-center lg:text-left">
+              <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-light text-gray-700 text-center lg:text-left">
                 <span>I'm </span>
                 <span className="font-bold text-black">Joaquin</span>
               </div>
