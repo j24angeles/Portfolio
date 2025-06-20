@@ -44,39 +44,6 @@ const Home = () => {
     }
   };
 
-  // CORRECTED function - use direct path to public folder
-  const handleDownloadResume = async () => {
-    try {
-      // Direct path to file in public folder
-      const resumeUrl = '/ANGELES_CV.pdf';
-      
-      // Test if file exists first
-      const response = await fetch(resumeUrl);
-      if (!response.ok) {
-        throw new Error('Resume file not found');
-      }
-      
-      // Create download
-      const blob = await response.blob();
-      const downloadUrl = window.URL.createObjectURL(blob);
-      
-      const link = document.createElement('a');
-      link.href = downloadUrl;
-      link.download = 'Joaquin-Angeles_CV.pdf';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      // Cleanup
-      window.URL.revokeObjectURL(downloadUrl);
-      
-    } catch (error) {
-      console.error('Failed to download resume:', error);
-      // Fallback - open in new tab
-      window.open('/ANGELES_CV.pdf', '_blank');
-    }
-  };
-
   return (
     <section 
       id="home" 
@@ -134,12 +101,6 @@ to complex problems and excited to bring creative visions to life.
                 style={{ backgroundColor: '#011936' }}
               >
                 View My Work
-              </button>
-              <button 
-                className="px-6 py-3 sm:px-8 sm:py-4 border-2 font-semibold rounded-xl transition-all duration-300 hover:text-white hover:bg-[#011936] hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#011936]/40 text-[#011936] border-[#011936] bg-transparent"
-                onClick={handleDownloadResume}
-              >
-                Download my CV
               </button>
             </div>
 

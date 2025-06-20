@@ -30,6 +30,27 @@ const Navbar = () => {
     setIsMenuOpen(false); // Close mobile menu
   };
 
+  // Download CV logic (copied from Home)
+  const handleDownloadResume = async () => {
+    try {
+      const resumeUrl = '/ANGELES_CV.pdf';
+      const response = await fetch(resumeUrl);
+      if (!response.ok) throw new Error('Resume file not found');
+      const blob = await response.blob();
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = 'Joaquin-Angeles_CV.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error('Failed to download resume:', error);
+      window.open('/ANGELES_CV.pdf', '_blank');
+    }
+  };
+
   const navItems = [
     { name: 'Home', href: '#home', id: 'home' },
     { name: 'About Me', href: '#about', id: 'about' },
@@ -79,6 +100,13 @@ const Navbar = () => {
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"></span>
               </a>
             ))}
+            <button
+              onClick={handleDownloadResume}
+              className="ml-4 px-5 py-2 border-2 font-semibold rounded-xl transition-all duration-300 hover:text-white hover:bg-[#011936] hover:scale-105 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-[#011936]/40 text-[#011936] border-[#011936] bg-transparent text-base"
+              style={{ fontFamily: 'Poppins, sans-serif' }}
+            >
+              Download CV
+            </button>
           </div>
 
           {/* Mobile menu button */}
