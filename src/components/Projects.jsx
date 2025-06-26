@@ -486,12 +486,12 @@ const Projects = () => {
                       <img 
                         src={project.image} 
                         alt={project.title}
-                        className={`w-full h-80 transition-all duration-300 ${project.title.includes('PeraMinder') ? 'object-contain scale-90' : 'object-cover'}`}
+                        className={`w-full h-44 sm:h-80 transition-all duration-300 ${project.title.includes('PeraMinder') ? 'object-contain scale-90' : 'object-cover sm:object-cover object-contain'}`}
                         style={project.title.includes('PeraMinder') ? { transform: 'scale(0.9)', objectFit: 'contain' } : {}}
                       />
                     ) : (
                       <PlaceholderImage 
-                        className="w-full h-80 transition-all duration-300"
+                        className="w-full h-44 sm:h-80 transition-all duration-300 object-contain"
                         alt={project.title}
                         category={project.category}
                       />
